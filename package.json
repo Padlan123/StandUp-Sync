@@ -14,5 +14,12 @@
         "pusher-js": "^8.5.0",
         "tailwindcss": "^4.2.4",
         "vite": "^8.0.0"
+    },
+    "dependencies": {
+        "@inertiajs/react": "^3.0.3",
+        "@vitejs/plugin-react": "^6.0.1",
+        "axios": "^1.15.2",
+        "react": "^19.2.5",
+        "react-dom": "^19.2.5"
     }
 }
