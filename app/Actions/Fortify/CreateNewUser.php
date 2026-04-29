@@ -22,17 +22,7 @@ class CreateNewUser implements CreatesNewUsers
      */
     public function create(array $input): User
     {
-        Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                Rule::unique(User::class),
-            ],
-            'password' => $this->passwordRules(),
-        ])->validate();
+        Validator::make($input, $this->rules(), $this->messages())->validate();
 
         $member = User::create([
             'name' => $input['name'],
@@ -41,5 +31,36 @@ class CreateNewUser implements CreatesNewUsers
         ]);
         $member->assignRole('member');
         return $member;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique(User::class),
+            ],
+            'password' => $this->passwordRules(),
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'isi nama anda',
+            'name.string' => 'nama harus berupa string',
+            'name.max' => 'nama tidak boleh lebih dari 255 karakter',
+            'email.required' => 'alamat email adalah wajib',
+            'email.email' => 'masukkan alamat email yang valid',
+            'email.max' => 'alamat email tidak boleh lebih dari 255 karakter',
+            'email.unique' => 'alamat email sudah digunakan',
+            'password.required' => 'password adalah wajib',
+            'password.string' => 'password harus berupa string',
+            'password.min' => 'password harus minimal 8 karakter',
+            'password.confirmed' => 'konfirmasi password tidak cocok',
+        ];
     }
 }
