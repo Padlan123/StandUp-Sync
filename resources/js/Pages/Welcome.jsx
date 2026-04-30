@@ -1,5 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
+import GradualBlur from '@/Components/GradualBlur';
 
 export default function Welcome({ auth }) {
     return (
@@ -250,7 +251,7 @@ export default function Welcome({ auth }) {
                 </main>
 
                 {/* Footer */}
-                <footer className="w-full border-t border-slate-100 bg-white text-xs tracking-normal text-slate-500">
+                <footer className="w-full border-t border-slate-100 bg-white text-xs tracking-normal text-slate-500 pb-12 relative z-10">
                     <div className="flex flex-col md:flex-row justify-between items-center px-6 lg:px-20 py-10 max-w-wide mx-auto">
                         <div className="flex items-center gap-2 mb-4 md:mb-0">
                             <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block dark:hidden" />
@@ -259,6 +260,18 @@ export default function Welcome({ auth }) {
                     </div>
                 </footer>
             </div>
+            
+            <GradualBlur
+                target="page"
+                position="bottom"
+                height="8rem"
+                strength={2}
+                divCount={5}
+                curve="bezier"
+                exponential={true}
+                opacity={1}
+                zIndex={40}
+            />
         </>
     );
 }
