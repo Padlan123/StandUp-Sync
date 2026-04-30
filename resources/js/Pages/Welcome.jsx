@@ -2,6 +2,7 @@ import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MagicRings from '@/Components/MagicRings';
 import BorderGlow from '@/Components/BorderGlow';
+import { FollowerPointerCard } from '@/Components/ui/following-pointer';
 
 export default function Welcome({ auth }) {
     return (
@@ -21,7 +22,7 @@ export default function Welcome({ auth }) {
                     <div className="flex items-center gap-12">
                         <div className="flex items-center gap-2">
                             {/* Logo */}
-                            <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block dark:hidden" />
+                            <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block" />
                         </div>
                         <div className="hidden md:flex gap-8">
                             <a className="text-[#10B981] border-b-2 border-[#10B981] pb-1" href="#">Features</a>
@@ -45,7 +46,7 @@ export default function Welcome({ auth }) {
 
                 <main className="pt-16">
                     {/* Hero Section */}
-                    <section className="bg-[#0F172A] relative overflow-hidden">
+                    <section className="bg-[#0F172A] relative">
                         {/* Magic Rings Background */}
                         <div className="absolute inset-0 z-0 opacity-40 pointer-events-auto">
                             <MagicRings
@@ -80,7 +81,7 @@ export default function Welcome({ auth }) {
                             <p className="text-lg text-slate-300 max-w-2xl mb-12 leading-relaxed pointer-events-auto">
                                 Briefly transforms messy daily check-ins on WhatsApp or Telegram into structured data. Let our <strong className="text-white">SyncBot</strong> chase progress reports, while your team focuses on building great things.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-6 mb-12 pointer-events-auto">
+                            <div className="flex flex-col sm:flex-row gap-6 mb-16 pointer-events-auto">
                                 <BorderGlow
                                     className="rounded-lg"
                                     edgeSensitivity={30}
@@ -102,10 +103,22 @@ export default function Welcome({ auth }) {
                                 </button>
                             </div>
                         </div>
+                    </section>
 
-                        {/* Overlapping Mockup */}
-                        <div className="max-w-wide mx-auto px-6 lg:px-20 -mt-32 md:-mt-48 relative z-10">
-                            <div className="grid-border bg-[#0F172A] rounded-2xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] border border-slate-700 flex flex-col">
+                    {/* Floating Chat Mockup — overlaps hero and features */}
+                    <div className="relative z-20 max-w-wide mx-auto px-6 lg:px-20 -mt-32 md:-mt-48">
+                        <FollowerPointerCard
+                            className="block w-full"
+                            title={
+                                <div className="flex items-center space-x-2">
+                                    <div className="w-5 h-5 rounded-full bg-[#10B981] flex items-center justify-center shadow-sm">
+                                        <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                    </div>
+                                    <p className="font-bold text-white">Briefly AI</p>
+                                </div>
+                            }
+                        >
+                            <div className="grid-border bg-[#0F172A] rounded-2xl overflow-hidden shadow-[0_32px_80px_-10px_rgba(0,0,0,0.6)] border border-slate-700 flex flex-col min-h-[900px] h-auto">
                                 {/* Top Bar */}
                                 <div className="h-12 flex items-center justify-between px-6 bg-[#1e293b] border-b border-slate-700">
                                     <div className="flex gap-2">
@@ -120,7 +133,7 @@ export default function Welcome({ auth }) {
                                     <div className="w-10"></div>
                                 </div>
                                 {/* Chat Content */}
-                                <div className="flex flex-col md:flex-row h-[500px] md:h-[600px] bg-[#0b1120]">
+                                <div className="flex flex-col md:flex-row flex-1 bg-[#0b1120] overflow-hidden">
                                     {/* Sidebar */}
                                     <div className="w-full md:w-80 border-r border-slate-800 flex-shrink-0 hidden md:flex flex-col bg-[#0F172A]">
                                         <div className="p-4 border-b border-slate-800">
@@ -129,7 +142,7 @@ export default function Welcome({ auth }) {
                                                 Search messages
                                             </div>
                                         </div>
-                                        <div className="flex-1 overflow-y-auto">
+                                        <div className="flex-1">
                                             <div className="px-4 py-3 bg-[#1e293b]/50 border-l-2 border-[#10B981] cursor-pointer">
                                                 <div className="flex items-center justify-between">
                                                     <h4 className="font-bold text-slate-200">Briefly SyncBot</h4>
@@ -177,7 +190,7 @@ export default function Welcome({ auth }) {
                                         </div>
                                         
                                         {/* Chat Messages */}
-                                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                                        <div className="flex-1 p-6 space-y-6">
                                             {/* Date separator */}
                                             <div className="flex justify-center">
                                                 <span className="bg-[#1e293b] border border-slate-700 text-slate-400 text-xs px-3 py-1 rounded-full">Today</span>
@@ -272,11 +285,10 @@ export default function Welcome({ auth }) {
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section>
+                        </FollowerPointerCard>
+                    </div>
 
-                    {/* Features Grid */}
-                    <section className="bg-white pt-24 pb-16">
+                    <section className="bg-white pt-64 pb-16">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-wide mx-auto px-6 lg:px-0">
                             <div className="grid-border p-10 lg:p-16 hover:bg-slate-50 transition-colors group">
                                 <svg className="text-[#10B981] w-8 h-8 mb-8 group-hover:scale-110 transition-transform block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -355,7 +367,7 @@ export default function Welcome({ auth }) {
                                         <div className="w-8 h-8 rounded-full bg-[#1e293b] flex-shrink-0"></div>
                                         <div className="bg-[#1e293b] border border-red-500/30 text-slate-300 p-3 rounded-2xl rounded-tl-none max-w-[80%] relative overflow-hidden">
                                             <div className="absolute top-0 left-0 w-1 h-full bg-red-500"></div>
-                                            Status recorded as <strong className="text-red-400">Blocker</strong>. Report has been synced to the Manager's Dashboard.
+                                            Status recorded as <strong className="text-red-400">Blocker</strong>. Report has been synced.
                                         </div>
                                     </div>
                                 </div>
@@ -373,6 +385,9 @@ export default function Welcome({ auth }) {
                                 <Link href={route('register')} className="bg-[#10B981] text-white px-8 py-4 rounded-xl font-bold hover:opacity-90 transition-opacity shadow-lg shadow-emerald-200 text-lg">
                                     Get Started for Free
                                 </Link>
+                                <button className="border border-slate-200 text-slate-600 px-8 py-4 rounded-xl font-bold hover:bg-slate-50 transition-colors text-lg">
+                                    Contact Sales
+                                </button>
                             </div>
                         </div>
                     </section>
@@ -382,7 +397,7 @@ export default function Welcome({ auth }) {
                 <footer className="w-full border-t border-slate-100 bg-white text-xs tracking-normal text-slate-500">
                     <div className="flex flex-col md:flex-row justify-between items-center px-6 lg:px-20 py-10 max-w-wide mx-auto">
                         <div className="flex items-center gap-2 mb-4 md:mb-0">
-                            <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block dark:hidden" />
+                            <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto" />
                         </div>
                         <p className="text-sm">© 2026 Briefly. Built with Laravel 11, React & Inertia.js.</p>
                     </div>
