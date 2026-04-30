@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import GradualBlur from '@/Components/GradualBlur';
+import MagicRings from '@/Components/MagicRings';
 
 export default function Welcome({ auth }) {
     return (
@@ -45,15 +46,41 @@ export default function Welcome({ auth }) {
                 <main className="pt-16">
                     {/* Hero Section */}
                     <section className="bg-white relative overflow-hidden">
-                        <div className="max-w-wide mx-auto px-6 lg:px-20 pt-24 md:pt-32 pb-48 md:pb-64 flex flex-col items-center text-center">
-                            <span className="text-xs font-bold text-[#10B981] bg-emerald-50 px-4 py-1.5 rounded-full mb-8 tracking-widest uppercase">Say Goodbye to Hour-Long Meetings 👋</span>
-                            <h1 className="font-bold text-[40px] md:text-[56px] leading-[1.05] text-[#0F172A] max-w-4xl mb-8 tracking-tight">
+                        {/* Magic Rings Background */}
+                        <div className="absolute inset-0 z-0 opacity-40 pointer-events-auto">
+                            <MagicRings
+                                color="#E2E8F0"
+                                colorTwo="#10B981"
+                                ringCount={5}
+                                speed={0.8}
+                                attenuation={8}
+                                lineThickness={2}
+                                baseRadius={0.15}
+                                radiusStep={0.12}
+                                scaleRate={0.05}
+                                opacity={1}
+                                blur={1}
+                                noiseAmount={0.05}
+                                rotation={0}
+                                ringGap={1.2}
+                                fadeIn={0.7}
+                                fadeOut={0.5}
+                                followMouse={true}
+                                mouseInfluence={0.1}
+                                hoverScale={1.1}
+                                parallax={0.03}
+                                clickBurst={true}
+                            />
+                        </div>
+                        <div className="max-w-wide mx-auto px-6 lg:px-20 pt-24 md:pt-32 pb-48 md:pb-64 flex flex-col items-center text-center relative z-10 pointer-events-none">
+                            <span className="text-xs font-bold text-[#10B981] bg-emerald-50 px-4 py-1.5 rounded-full mb-8 tracking-widest uppercase pointer-events-auto">Say Goodbye to Hour-Long Meetings 👋</span>
+                            <h1 className="font-bold text-[40px] md:text-[56px] leading-[1.05] text-[#0F172A] max-w-4xl mb-8 tracking-tight pointer-events-auto">
                                 Daily Team Syncs, <br/>Without the Chat Drama.
                             </h1>
-                            <p className="text-lg text-[#565e74] max-w-2xl mb-12 leading-relaxed">
+                            <p className="text-lg text-[#565e74] max-w-2xl mb-12 leading-relaxed pointer-events-auto">
                                 Briefly transforms messy daily check-ins on WhatsApp or Telegram into structured data. Let our <strong>SyncBot</strong> chase progress reports, while your team focuses on building great things.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-6 mb-12">
+                            <div className="flex flex-col sm:flex-row gap-6 mb-12 pointer-events-auto">
                                 <Link href={route('register')} className="bg-[#10B981] text-white font-bold px-10 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity shadow-lg shadow-emerald-200 flex items-center justify-center">
                                     Try Briefly for Free
                                 </Link>
