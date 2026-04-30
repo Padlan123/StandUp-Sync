@@ -59,34 +59,34 @@ export default function Register() {
             <Head title="Register" />
             
             {/* Left Side: Branding */}
-            <div className="hidden lg:flex lg:w-[45%] relative bg-gradient-to-b from-[#10B981] to-[#064E3B] p-12 flex-col justify-between overflow-hidden">
+            <div className="hidden lg:flex lg:w-[45%] relative bg-gradient-to-b from-[#10B981] to-[#064E3B] p-8 flex-col justify-between overflow-hidden">
                 {/* Geometric Pattern Overlay */}
                 <div 
                     className="absolute inset-0 opacity-10" 
                     style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)' }}
                 ></div>
                 
-                <div className="relative z-10 flex items-center gap-3">
+                <div className="relative z-10 flex items-center gap-2">
                     {/* Logo briefly */}
-                    <div className="w-10 h-10 rounded-lg bg-white flex items-center justify-center shadow-lg">
-                        <span className="text-[#10B981] font-bold text-2xl">b</span>
+                    <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shadow-lg">
+                        <span className="text-[#10B981] font-bold text-xl">b</span>
                     </div>
-                    <span className="text-white font-bold text-2xl tracking-tight">briefly</span>
+                    <span className="text-white font-bold text-xl tracking-tight">briefly</span>
                 </div>
 
                 <div className="relative z-10 text-white w-full max-w-lg">
                     {/* Glassmorphism Card */}
-                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8 shadow-2xl">
-                        <div className="flex items-center gap-3 mb-5">
-                            <div className="w-3 h-3 rounded-full bg-[#10B981] animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
-                            <span className="text-sm font-medium text-emerald-50 tracking-wide uppercase">Daily Stand-up Bot</span>
+                    <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl">
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="w-2.5 h-2.5 rounded-full bg-[#10B981] animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div>
+                            <span className="text-xs font-medium text-emerald-50 tracking-wide uppercase">Daily Stand-up Bot</span>
                         </div>
-                        <h2 className="text-3xl font-bold mb-3 leading-tight text-white">
+                        <h2 className="text-2xl font-bold mb-2 leading-tight text-white">
                             {role === 'employee' 
                                 ? 'Synchronize your daily work in seconds.' 
                                 : 'Manage your team effortlessly.'}
                         </h2>
-                        <p className="text-emerald-100/90 text-base leading-relaxed">
+                        <p className="text-emerald-100/90 text-sm leading-relaxed">
                             {role === 'employee'
                                 ? 'Join briefly to keep your team aligned without the endless meetings. Experience the fastest way to report progress and unblock tasks.'
                                 : 'Create your workspace and get a bird\'s-eye view of your entire team\'s progress without micromanaging.'}
@@ -94,17 +94,17 @@ export default function Register() {
                     </div>
                 </div>
 
-                <div className="relative z-10 text-emerald-100/60 text-sm">
+                <div className="relative z-10 text-emerald-100/60 text-xs">
                     &copy; 2026 briefly. All rights reserved.
                 </div>
             </div>
 
             {/* Right Side: Form */}
-            <div className="w-full lg:w-[55%] flex items-center justify-center p-8 sm:p-12 lg:p-16 overflow-y-auto">
-                <div className="w-full max-w-sm space-y-8 py-8">
+            <div className="w-full lg:w-[55%] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
+                <div className="w-full max-w-sm space-y-5 py-4">
                     <div>
-                        <h2 className="text-3xl font-bold text-[#0F172A]">Create Your Account</h2>
-                        <p className="mt-2 text-sm text-slate-500">Choose your role and get started with briefly.</p>
+                        <h2 className="text-2xl font-bold text-[#0F172A]">Create Your Account</h2>
+                        <p className="mt-1 text-xs text-slate-500">Choose your role and get started with briefly.</p>
                     </div>
 
                     {/* Role Selection Tabs */}
@@ -112,7 +112,7 @@ export default function Register() {
                         <button
                             type="button"
                             onClick={() => handleRoleChange('employee')}
-                            className={`flex-1 py-2.5 text-sm font-medium rounded-md transition-all duration-200 ${
+                            className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
                                 role === 'employee' 
                                     ? 'bg-white text-[#10B981] shadow-sm ring-1 ring-slate-200/50' 
                                     : 'text-slate-500 hover:text-slate-700'
@@ -123,7 +123,7 @@ export default function Register() {
                         <button
                             type="button"
                             onClick={() => handleRoleChange('manager')}
-                            className={`flex-1 py-2.5 text-sm font-medium rounded-md transition-all duration-200 ${
+                            className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
                                 role === 'manager' 
                                     ? 'bg-white text-[#10B981] shadow-sm ring-1 ring-slate-200/50' 
                                     : 'text-slate-500 hover:text-slate-700'
@@ -133,48 +133,48 @@ export default function Register() {
                         </button>
                     </div>
 
-                    <form onSubmit={submit} className="space-y-5">
+                    <form onSubmit={submit} className="space-y-3">
                         <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-[#0F172A]">Full Name</label>
+                            <label htmlFor="name" className="block text-xs font-medium text-[#0F172A]">Full Name</label>
                             <input
                                 id="name"
                                 name="name"
                                 value={data.name}
-                                className="mt-1.5 block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
                                 autoComplete="name"
                                 autoFocus
                                 onChange={(e) => setData('name', e.target.value)}
                                 required
                             />
-                            {errors.name && <p className="mt-1.5 text-sm text-red-500">{errors.name}</p>}
+                            {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
                         </div>
 
                         <div>
-                            <label htmlFor="email" className="block text-sm font-medium text-[#0F172A]">Email Address</label>
+                            <label htmlFor="email" className="block text-xs font-medium text-[#0F172A]">Email Address</label>
                             <input
                                 id="email"
                                 type="email"
                                 name="email"
                                 value={data.email}
-                                className="mt-1.5 block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
+                                className="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
                                 autoComplete="username"
                                 onChange={(e) => setData('email', e.target.value)}
                                 required
                             />
-                            {errors.email && <p className="mt-1.5 text-sm text-red-500">{errors.email}</p>}
+                            {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
                         </div>
 
                         {/* Vertically Stacked Password Fields */}
-                        <div className="space-y-5">
+                        <div className="space-y-3">
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-[#0F172A]">Password</label>
-                                <div className="relative mt-1.5">
+                                <label htmlFor="password" className="block text-xs font-medium text-[#0F172A]">Password</label>
+                                <div className="relative mt-1">
                                     <input
                                         id="password"
                                         type={showPassword ? "text" : "password"}
                                         name="password"
                                         value={data.password}
-                                        className="block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none pr-12"
+                                        className="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none pr-10"
                                         autoComplete="new-password"
                                         onChange={(e) => setData('password', e.target.value)}
                                         required
@@ -182,32 +182,32 @@ export default function Register() {
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-[#10B981] transition-colors focus:outline-none"
+                                        className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-[#10B981] transition-colors focus:outline-none"
                                     >
                                         {showPassword ? (
-                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                             </svg>
                                         ) : (
-                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
                                         )}
                                     </button>
                                 </div>
-                                {errors.password && <p className="mt-1.5 text-sm text-red-500">{errors.password}</p>}
+                                {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password}</p>}
                             </div>
 
                             <div>
-                                <label htmlFor="password_confirmation" className="block text-sm font-medium text-[#0F172A]">Confirm Password</label>
-                                <div className="relative mt-1.5">
+                                <label htmlFor="password_confirmation" className="block text-xs font-medium text-[#0F172A]">Confirm Password</label>
+                                <div className="relative mt-1">
                                     <input
                                         id="password_confirmation"
                                         type={showConfirmPassword ? "text" : "password"}
                                         name="password_confirmation"
                                         value={data.password_confirmation}
-                                        className="block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none pr-12"
+                                        className="block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none pr-10"
                                         autoComplete="new-password"
                                         onChange={(e) => setData('password_confirmation', e.target.value)}
                                         required
@@ -215,14 +215,14 @@ export default function Register() {
                                     <button
                                         type="button"
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-[#10B981] transition-colors focus:outline-none"
+                                        className="absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 hover:text-[#10B981] transition-colors focus:outline-none"
                                     >
                                         {showConfirmPassword ? (
-                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
                                             </svg>
                                         ) : (
-                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                             </svg>
@@ -233,28 +233,28 @@ export default function Register() {
                         </div>
 
                         {/* Employee Specific Fields */}
-                        <div className={`space-y-5 transition-all duration-300 ${role === 'employee' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+                        <div className={`space-y-3 transition-all duration-300 ${role === 'employee' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
                             <div>
-                                <label htmlFor="invitation_code" className="block text-sm font-medium text-[#0F172A]">Company Invitation Code</label>
+                                <label htmlFor="invitation_code" className="block text-xs font-medium text-[#0F172A]">Company Invitation Code</label>
                                 <input
                                     id="invitation_code"
                                     name="invitation_code"
                                     value={data.invitation_code}
-                                    className="mt-1.5 block w-full px-4 py-3 bg-emerald-50/50 border border-[#10B981]/40 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none placeholder:text-emerald-700/40"
+                                    className="mt-1 block w-full px-3 py-2 bg-emerald-50/50 border border-[#10B981]/40 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none placeholder:text-emerald-700/40"
                                     placeholder="e.g. BRF-2026-XYZ"
                                     onChange={(e) => setData('invitation_code', e.target.value)}
                                     required={role === 'employee'}
                                 />
-                                {errors.invitation_code && <p className="mt-1.5 text-sm text-red-500">{errors.invitation_code}</p>}
+                                {errors.invitation_code && <p className="mt-1 text-xs text-red-500">{errors.invitation_code}</p>}
                             </div>
 
                             <div>
-                                <label className="block text-sm font-medium text-[#0F172A]">Your Position</label>
-                                <div className="relative mt-1.5" ref={dropdownRef}>
+                                <label className="block text-xs font-medium text-[#0F172A]">Your Position</label>
+                                <div className="relative mt-1" ref={dropdownRef}>
                                     <button
                                         type="button"
                                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                        className={`flex w-full items-center justify-between px-4 py-3 bg-white border ${isDropdownOpen ? 'border-[#10B981] ring-1 ring-[#10B981]' : 'border-slate-200'} rounded-lg text-left text-[#0F172A] focus:outline-none transition-all`}
+                                        className={`flex w-full items-center justify-between px-3 py-2 bg-white border ${isDropdownOpen ? 'border-[#10B981] ring-1 ring-[#10B981]' : 'border-slate-200'} rounded-lg text-left text-sm text-[#0F172A] focus:outline-none transition-all`}
                                     >
                                         <span className={data.position ? 'text-[#0F172A]' : 'text-slate-400'}>
                                             {data.position || 'Select your role'}
@@ -266,12 +266,12 @@ export default function Register() {
 
                                     {/* Custom Dropdown Menu */}
                                     {isDropdownOpen && (
-                                        <div className="absolute z-50 w-full mt-1.5 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden py-1 max-h-52 overflow-y-auto custom-scrollbar">
+                                        <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden py-1 max-h-40 overflow-y-auto custom-scrollbar">
                                             {positionRoles.map((roleOpt) => (
                                                 <button
                                                     key={roleOpt}
                                                     type="button"
-                                                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                                                    className={`w-full text-left px-3 py-2 text-sm transition-colors ${
                                                         data.position === roleOpt 
                                                             ? 'bg-emerald-50 text-[#10B981] font-medium' 
                                                             : 'text-[#0F172A] hover:bg-slate-50 hover:text-[#10B981]'
@@ -286,7 +286,6 @@ export default function Register() {
                                             ))}
                                         </div>
                                     )}
-                                    {/* Hidden actual input for native form validation if needed, though Inertia handles submit without it */}
                                     <input 
                                         type="hidden" 
                                         name="position" 
@@ -294,34 +293,34 @@ export default function Register() {
                                         required={role === 'employee'} 
                                     />
                                 </div>
-                                {errors.position && <p className="mt-1.5 text-sm text-red-500">{errors.position}</p>}
+                                {errors.position && <p className="mt-1 text-xs text-red-500">{errors.position}</p>}
                             </div>
                         </div>
 
                         {/* Manager Specific Fields */}
-                        <div className={`space-y-5 transition-all duration-300 ${role === 'manager' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+                        <div className={`space-y-3 transition-all duration-300 ${role === 'manager' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
                             <div>
-                                <label htmlFor="company_name" className="block text-sm font-medium text-[#0F172A]">Company Name</label>
+                                <label htmlFor="company_name" className="block text-xs font-medium text-[#0F172A]">Company Name</label>
                                 <input
                                     id="company_name"
                                     name="company_name"
                                     value={data.company_name}
-                                    className="mt-1.5 block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
+                                    className="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
                                     placeholder="Your organization name"
                                     onChange={(e) => setData('company_name', e.target.value)}
                                     required={role === 'manager'}
                                 />
-                                {errors.company_name && <p className="mt-1.5 text-sm text-red-500">{errors.company_name}</p>}
+                                {errors.company_name && <p className="mt-1 text-xs text-red-500">{errors.company_name}</p>}
                             </div>
                         </div>
 
                         <button
                             type="submit"
-                            className={`w-full py-3.5 px-4 bg-[#000000] hover:bg-black/90 text-white font-medium rounded-lg transition-all flex items-center justify-center mt-8 shadow-sm ${processing ? 'opacity-70 cursor-not-allowed' : ''}`}
+                            className={`w-full py-2.5 px-4 bg-[#000000] hover:bg-black/90 text-white text-sm font-medium rounded-lg transition-all flex items-center justify-center mt-5 shadow-sm ${processing ? 'opacity-70 cursor-not-allowed' : ''}`}
                             disabled={processing}
                         >
                             {processing ? (
-                                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
@@ -331,8 +330,8 @@ export default function Register() {
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center border-t border-slate-100 pt-8">
-                        <p className="text-sm text-slate-500">
+                    <div className="mt-5 text-center border-t border-slate-100 pt-5">
+                        <p className="text-xs text-slate-500">
                             Already have an account?{' '}
                             <Link href={route('login')} className="font-semibold text-[#10B981] hover:underline">
                                 Login here
