@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#131b2e",
+                        "on-background": "#161d19",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "on-primary-container": "#00422b",
+                        "secondary-container": "#dae2fd",
+                        "on-primary": "#ffffff",
+                        "inverse-on-surface": "#ebf3eb",
+                        "on-primary-fixed": "#002113",
+                        "on-tertiary-container": "#711419",
+                        "secondary": "#565e74",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#fc7c78",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-surface": "#161d19",
+                        "midnight-slate": "#0F172A",
+                        "primary-fixed-dim": "#4edea3",
+                        "surface-container": "#e8f0e9",
+                        "surface-tint": "#006c49",
+                        "outline-variant": "#bbcabf",
+                        "surface-dim": "#d4dcd5",
+                        "secondary-fixed": "#dae2fd",
+                        "inverse-surface": "#2b322d",
+                        "on-primary-fixed-variant": "#005236",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#ffb3af",
+                        "primary-container": "#10b981",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-white": "#FFFFFF",
+                        "outline": "#6c7a71",
+                        "inverse-primary": "#4edea3",
+                        "primary": "#006c49",
+                        "surface-variant": "#dde4dd",
+                        "on-tertiary-fixed": "#410005",
+                        "forest-deep": "#064E3B",
+                        "tertiary-fixed": "#ffdad7",
+                        "surface-container-high": "#e3eae3",
+                        "border-subtle": "#E2E8F0",
+                        "surface-container-low": "#eef6ee",
+                        "surface": "#f4fbf4",
+                        "surface-bright": "#f4fbf4",
+                        "on-surface-variant": "#3c4a42",
+                        "background": "#f4fbf4",
+                        "pulse-emerald": "#10B981",
+                        "on-error": "#ffffff",
+                        "tertiary": "#a43a3a",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#6ffbbe",
+                        "surface-container-highest": "#dde4dd",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#5c647a",
+                        "pure-black": "#000000",
+                        "on-tertiary-fixed-variant": "#842225"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "24px",
+                        "container-padding": "64px",
+                        "xs": "4px",
+                        "md": "16px",
+                        "gutter": "24px",
+                        "xl": "48px",
+                        "sm": "8px",
+                        "unit": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Inter"],
+                        "body-base": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "title-sm": ["Inter"],
+                        "display-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-base": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "title-sm": ["18px", {"lineHeight": "1.5", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #161d19; }
+        .grid-border { border: 1px solid #E2E8F0; }
+        .grid-border-b { border-bottom: 1px solid #E2E8F0; }
+        .grid-border-r { border-right: 1px solid #E2E8F0; }
+        .glass-card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .pulse-glow:focus { border-color: #10B981; box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1); }
+        .max-w-wide { max-width: 1440px; }
+    </style>
+</head>
+<body class="antialiased">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 border-b border-slate-100 bg-white/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-20 h-16 font-['Inter'] antialiased text-sm font-medium tracking-tight">
+<div class="flex items-center gap-12">
+<span class="text-lg font-black tracking-tighter text-slate-950">Briefly</span>
+<div class="hidden md:flex gap-8">
+<a class="text-emerald-600 border-b-2 border-emerald-500 pb-1" href="#">Docs</a>
+<a class="text-slate-500 hover:text-slate-900 transition-colors duration-200" href="#">Components</a>
+<a class="text-slate-500 hover:text-slate-900 transition-colors duration-200" href="#">Ecosystem</a>
+<a class="text-slate-500 hover:text-slate-900 transition-colors duration-200" href="#">Community</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-500 hover:text-slate-900 px-4 py-2 transition-colors">Log In</button>
+<button class="bg-pulse-emerald text-white px-6 py-2 rounded-lg font-bold active:scale-[0.98] transition-transform">Get Started</button>
+</div>
+</nav>
+<main class="pt-16">
+<!-- Restructured Hero Section with Overlap -->
+<section class="bg-white relative overflow-hidden">
+<div class="max-w-wide mx-auto px-6 lg:px-20 pt-24 md:pt-32 pb-48 md:pb-64 flex flex-col items-center text-center">
+<span class="font-label-caps text-label-caps text-pulse-emerald bg-emerald-50 px-4 py-1.5 rounded-full mb-8">v2.0 NOW LIVE</span>
+<h1 class="font-display-lg text-[56px] leading-[1.05] text-midnight-slate max-w-4xl mb-8 tracking-tight">
+                    Daily Stand-ups, <br/>without the chaos.
+                </h1>
+<p class="font-body-base text-lg text-secondary max-w-2xl mb-12 leading-relaxed">
+                    Briefly automates status reports, tracks blockers in real-time, and integrates directly with your engineering workflow. No more hour-long meetings.
+                </p>
+<div class="flex flex-col sm:flex-row gap-6 mb-12">
+<button class="bg-pulse-emerald text-white font-bold px-10 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity shadow-lg shadow-emerald-200">
+                        Start for Free
+                    </button>
+<button class="grid-border text-midnight-slate font-bold px-10 py-4 rounded-lg text-lg hover:bg-slate-50 transition-colors bg-white">
+                        Book a Demo
+                    </button>
+</div>
+</div>
+<!-- Overlapping Mockup -->
+<div class="max-w-wide mx-auto px-6 lg:px-20 -mt-32 md:-mt-48 relative z-10">
+<div class="grid-border bg-white rounded-2xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.12)]">
+<!-- Top Bar -->
+<div class="grid-border-b h-14 flex items-center justify-between px-6 bg-white">
+<div class="flex gap-2">
+<div class="w-3.5 h-3.5 rounded-full bg-red-400"></div>
+<div class="w-3.5 h-3.5 rounded-full bg-yellow-400"></div>
+<div class="w-3.5 h-3.5 rounded-full bg-green-400"></div>
+</div>
+<div class="text-xs font-mono text-slate-400 bg-slate-100 px-4 py-1.5 rounded-full">briefly.app/dashboard</div>
+<div class="w-10"></div>
+</div>
+<!-- Dashboard Content -->
+<div class="flex flex-col md:flex-row min-h-[600px]">
+<div class="w-full md:w-72 grid-border-r p-8 hidden md:block bg-slate-50/30">
+<div class="space-y-8">
+<div class="h-5 w-28 bg-slate-100 rounded-lg"></div>
+<div class="space-y-4">
+<div class="h-3.5 w-full bg-slate-100 rounded"></div>
+<div class="h-3.5 w-4/5 bg-slate-100 rounded"></div>
+<div class="h-3.5 w-full bg-slate-200 rounded"></div>
+<div class="h-3.5 w-2/3 bg-slate-100 rounded"></div>
+</div>
+</div>
+</div>
+<div class="flex-1 p-8 lg:p-14">
+<div class="flex items-center justify-between mb-12">
+<h3 class="font-headline-md text-headline-md text-midnight-slate">Active Stand-up</h3>
+<div class="flex -space-x-3">
+<img alt="avatar" class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmoseMYA7fcbG8Bk2AavjFd1NHaqJhSmjOX7od6yrFCyxIio4yAVtO9j2f-QFDdQ3yuxmZebs8DQjd9PXemG3r9gq-zJQTwvi48FKiVBX83UQKkEVclqdd48gb5SE6YLf4AQzUw_J0rYLhlBGp0oSm41x8ZwJUtac2aD0b2CgCACS7LNMOx5jUC_2AIDAqxNd5H0_dFT-mR6LCOkbBSt5hDpp-wYJumb1VcuVAs0mIMl5ydWh2N81UbJvOCpit7fYsDewhv4TQ9G-I"/>
+<img alt="avatar" class="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN2x7lZGkeTKL9xD7r4y1M9DP26Hu1OJuSxIYTrKSPmT_2IxTC2terPt8anIVIKgilnOIwJeJEwbz6ImIkiBS3mGOyW2pasawMLvxpTacimuyg4XgeTjIpw3bST5Ug4dYYVRO6ulUCcgQIBaJkxQHs84RwGPNzGdhG-2fel0j_q-vTgZ7eq5mE5szqGCyPUhJ-Hy8xFHhrbmgkH3wvSTu7nwzJ8bHBT_W7Fp_ZSN6hsK-iTLkl3vzbSovkbBCPXZlCtjEKkX9XfezW"/>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">+4</div>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Status Row -->
+<div class="grid-border rounded-xl p-6 flex items-center justify-between hover:bg-slate-50 transition-all cursor-default">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-bold text-base text-midnight-slate">Alex Rivera</p>
+<p class="text-sm text-slate-500">Refactoring UI components</p>
+</div>
+</div>
+<span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Safe</span>
+</div>
+<div class="grid-border rounded-xl p-6 flex items-center justify-between border-red-100 bg-red-50/10 hover:bg-red-50/20 transition-all cursor-default">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-bold text-base text-midnight-slate">Jordan Smith</p>
+<p class="text-sm text-slate-500">API Authentication delay</p>
+</div>
+</div>
+<span class="bg-red-100 text-red-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Blocker</span>
+</div>
+<div class="grid-border rounded-xl p-6 flex items-center justify-between hover:bg-slate-50 transition-all cursor-default">
+<div class="flex items-center gap-5">
+<div class="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined">person</span>
+</div>
+<div>
+<p class="font-bold text-base text-midnight-slate">Sarah Chen</p>
+<p class="text-sm text-slate-500">Writing documentation</p>
+</div>
+</div>
+<span class="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Safe</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Grid -->
+<section class="bg-white pt-24">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-wide mx-auto">
+<div class="grid-border p-16 hover:bg-slate-50 transition-colors group">
+<span class="material-symbols-outlined text-pulse-emerald mb-8 text-3xl group-hover:scale-110 transition-transform block">bolt</span>
+<h4 class="font-title-sm text-xl mb-4 text-midnight-slate">Instant Sync</h4>
+<p class="font-body-base text-base text-secondary leading-relaxed">Synchronize stand-ups across Slack, Teams, and Discord automatically.</p>
+</div>
+<div class="grid-border p-16 hover:bg-slate-50 transition-colors group border-l-0">
+<span class="material-symbols-outlined text-pulse-emerald mb-8 text-3xl group-hover:scale-110 transition-transform block">analytics</span>
+<h4 class="font-title-sm text-xl mb-4 text-midnight-slate">Velocity Metrics</h4>
+<p class="font-body-base text-base text-secondary leading-relaxed">Track team health and project blockers with AI-driven analytics dashboards.</p>
+</div>
+<div class="grid-border p-16 hover:bg-slate-50 transition-colors group border-l-0">
+<span class="material-symbols-outlined text-pulse-emerald mb-8 text-3xl group-hover:scale-110 transition-transform block">security</span>
+<h4 class="font-title-sm text-xl mb-4 text-midnight-slate">Enterprise Security</h4>
+<p class="font-body-base text-base text-secondary leading-relaxed">SOC2 compliant data handling with end-to-end encryption by default.</p>
+</div>
+<div class="grid-border p-16 hover:bg-slate-50 transition-colors group border-l-0">
+<span class="material-symbols-outlined text-pulse-emerald mb-8 text-3xl group-hover:scale-110 transition-transform block">integration_instructions</span>
+<h4 class="font-title-sm text-xl mb-4 text-midnight-slate">Git Integration</h4>
+<p class="font-body-base text-base text-secondary leading-relaxed">Link pull requests and commits directly to daily status updates.</p>
+</div>
+</div>
+</section>
+<!-- Developer Section (Terminal) -->
+<section class="grid-border-b bg-midnight-slate py-32 px-6 lg:px-20">
+<div class="max-w-wide mx-auto grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div>
+<h2 class="font-display-lg text-[42px] text-white mb-8">Built for Developers</h2>
+<p class="text-slate-400 mb-10 text-lg leading-relaxed font-body-base">Interact with Briefly from your favorite shell. Script your updates, manage your blockers, and view team status without leaving the terminal.</p>
+<ul class="space-y-5 text-slate-300">
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-pulse-emerald text-base">check_circle</span>
+                            Open-source CLI tool
+                        </li>
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-pulse-emerald text-base">check_circle</span>
+                            GraphQL and REST APIs
+                        </li>
+<li class="flex items-center gap-4">
+<span class="material-symbols-outlined text-pulse-emerald text-base">check_circle</span>
+                            Webhook support for custom flows
+                        </li>
+</ul>
+</div>
+<div class="bg-[#0b1120] rounded-2xl overflow-hidden border border-slate-700 shadow-[0_40px_80px_-15px_rgba(0,0,0,0.5)]">
+<div class="bg-[#1e293b] px-5 py-3 flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-slate-600"></div>
+<div class="w-3 h-3 rounded-full bg-slate-600"></div>
+<div class="w-3 h-3 rounded-full bg-slate-600"></div>
+<span class="text-[11px] text-slate-400 ml-4 font-mono uppercase tracking-widest">zsh — briefly</span>
+</div>
+<div class="p-8 font-mono text-sm leading-relaxed">
+<div class="flex gap-4 mb-3">
+<span class="text-slate-500">$</span>
+<span class="text-emerald-400">briefly</span>
+<span class="text-white">login</span>
+</div>
+<div class="text-slate-400 mb-6 ml-6">Authenticating with GitHub... Success.</div>
+<div class="flex gap-4 mb-3">
+<span class="text-slate-500">$</span>
+<span class="text-emerald-400">briefly</span>
+<span class="text-white">status</span>
+<span class="text-emerald-400">--blocker</span>
+<span class="text-slate-400">"CI/CD pipeline failing"</span>
+</div>
+<div class="text-slate-400 mb-6 ml-6">Update posted to #engineering-sync.</div>
+<div class="flex gap-4">
+<span class="text-slate-500">$</span>
+<span class="text-emerald-400">briefly</span>
+<span class="text-white">ls</span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-6 ml-6 text-slate-500 border-t border-slate-800 pt-6">
+<span>USER</span>
+<span>STATUS</span>
+<span>TIME</span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-3 ml-6">
+<span class="text-white">jordan</span>
+<span class="text-red-400">BLOCKED</span>
+<span class="text-slate-500">2m ago</span>
+</div>
+<div class="grid grid-cols-3 gap-2 mt-3 ml-6">
+<span class="text-white">alex</span>
+<span class="text-emerald-400">SAFE</span>
+<span class="text-slate-500">14m ago</span>
+</div>
+<div class="mt-8 flex gap-4">
+<span class="text-slate-500">$</span>
+<span class="w-2 h-5 bg-pulse-emerald animate-pulse"></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-32 px-6 lg:px-20 bg-white">
+<div class="max-w-wide mx-auto">
+<div class="text-center mb-20">
+<h2 class="font-headline-md text-4xl text-midnight-slate mb-6">Simple, transparent pricing.</h2>
+<p class="text-secondary text-lg">Start free, upgrade when your team grows.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-0 max-w-5xl mx-auto rounded-2xl overflow-hidden grid-border shadow-sm">
+<!-- Free -->
+<div class="p-12 flex flex-col grid-border-r md:border-b-0 border-b">
+<div class="mb-10">
+<h3 class="font-bold text-xl mb-3 text-midnight-slate">Free</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-5xl font-black text-midnight-slate">$0</span>
+<span class="text-slate-500">/mo</span>
+</div>
+</div>
+<ul class="space-y-5 mb-12 flex-grow">
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Up to 10 users
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                7-day history
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Slack integration
+                            </li>
+</ul>
+<button class="grid-border w-full py-4 rounded-lg font-bold hover:bg-slate-50 transition-colors">Start Free</button>
+</div>
+<!-- Pro -->
+<div class="p-12 flex flex-col grid-border-r md:border-b-0 border-b bg-slate-50/50 relative">
+<div class="absolute top-0 right-0 bg-pulse-emerald text-white text-[10px] font-black px-5 py-1.5 rounded-bl">MOST POPULAR</div>
+<div class="mb-10">
+<h3 class="font-bold text-xl mb-3 text-midnight-slate">Pro</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-5xl font-black text-midnight-slate">$12</span>
+<span class="text-slate-500">/user/mo</span>
+</div>
+</div>
+<ul class="space-y-5 mb-12 flex-grow">
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Unlimited users
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Unlimited history
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Custom dashboards
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Priority support
+                            </li>
+</ul>
+<button class="bg-pulse-emerald text-white w-full py-4 rounded-lg font-bold hover:opacity-90 transition-opacity shadow-lg shadow-emerald-100">Go Pro</button>
+</div>
+<!-- Enterprise -->
+<div class="p-12 flex flex-col">
+<div class="mb-10">
+<h3 class="font-bold text-xl mb-3 text-midnight-slate">Enterprise</h3>
+<div class="flex items-baseline gap-1">
+<span class="text-5xl font-black text-midnight-slate">Custom</span>
+</div>
+</div>
+<ul class="space-y-5 mb-12 flex-grow">
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Dedicated instance
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                SSO &amp; SAML
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                SLA guarantees
+                            </li>
+<li class="flex items-center gap-4 text-sm text-slate-600">
+<span class="material-symbols-outlined text-pulse-emerald text-lg">check</span>
+                                Account manager
+                            </li>
+</ul>
+<button class="grid-border w-full py-4 rounded-lg font-bold hover:bg-slate-50 transition-colors">Contact Sales</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (Shared Component) -->
+<footer class="w-full border-t border-slate-100 bg-white font-['Inter'] text-xs tracking-normal text-slate-500">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 px-6 lg:px-20 py-20 max-w-wide mx-auto">
+<div class="col-span-2">
+<span class="text-xl font-black tracking-tighter text-slate-950 block mb-6">Briefly</span>
+<p class="mb-8 max-w-xs text-sm leading-relaxed">© 2024 Briefly. High-velocity developer experience. Empowering teams to communicate faster and build better.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-slate-400 hover:text-pulse-emerald cursor-pointer transition-colors">share</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-pulse-emerald cursor-pointer transition-colors">public</span>
+<span class="material-symbols-outlined text-slate-400 hover:text-pulse-emerald cursor-pointer transition-colors">mail</span>
+</div>
+</div>
+<div>
+<h5 class="font-bold text-slate-900 mb-6 uppercase tracking-[0.2em] text-[10px]">Product</h5>
+<ul class="space-y-4">
+<li><a class="hover:text-slate-900 transition-colors" href="#">Documentation</a></li>
+<li><a class="hover:text-slate-900 transition-colors" href="#">Changelog</a></li>
+<li><a class="hover:text-slate-900 transition-colors" href="#">Pricing</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-slate-900 mb-6 uppercase tracking-[0.2em] text-[10px]">Resources</h5>
+<ul class="space-y-4">
+<li><a class="hover:text-slate-900 transition-colors" href="#">GitHub</a></li>
+<li><a class="hover:text-slate-900 transition-colors" href="#">Discord</a></li>
+<li><a class="hover:text-slate-900 transition-colors" href="#">Twitter</a></li>
+</ul>
+</div>
+<div class="col-span-2 md:col-span-1">
+<h5 class="font-bold text-slate-900 mb-6 uppercase tracking-[0.2em] text-[10px]">Legal</h5>
+<ul class="space-y-4">
+<li><a class="hover:text-slate-900 transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-slate-900 transition-colors" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+</footer>
+</body></html>
