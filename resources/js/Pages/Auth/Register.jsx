@@ -59,7 +59,7 @@ export default function Register() {
             <Head title="Register" />
             
             {/* Left Side: Branding */}
-            <div className="hidden lg:flex lg:w-[45%] relative bg-gradient-to-b from-[#10B981] to-[#064E3B] p-8 flex-col justify-between overflow-hidden">
+            <div className="hidden lg:flex lg:w-[45%] relative bg-[#111827] p-8 flex-col justify-between overflow-hidden">
                 {/* Geometric Pattern Overlay */}
                 <div 
                     className="absolute inset-0 opacity-10" 
