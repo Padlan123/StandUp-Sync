@@ -45,11 +45,11 @@ export default function Welcome({ auth }) {
 
                 <main className="pt-16">
                     {/* Hero Section */}
-                    <section className="bg-white relative overflow-hidden">
+                    <section className="bg-[#0F172A] relative overflow-hidden">
                         {/* Magic Rings Background */}
                         <div className="absolute inset-0 z-0 opacity-40 pointer-events-auto">
                             <MagicRings
-                                color="#E2E8F0"
+                                color="#38bdf8"
                                 colorTwo="#10B981"
                                 ringCount={5}
                                 speed={0.8}
@@ -73,18 +73,18 @@ export default function Welcome({ auth }) {
                             />
                         </div>
                         <div className="max-w-wide mx-auto px-6 lg:px-20 pt-24 md:pt-32 pb-48 md:pb-64 flex flex-col items-center text-center relative z-10 pointer-events-none">
-                            <span className="text-xs font-bold text-[#10B981] bg-emerald-50 px-4 py-1.5 rounded-full mb-8 tracking-widest uppercase pointer-events-auto">Say Goodbye to Hour-Long Meetings 👋</span>
-                            <h1 className="font-bold text-[40px] md:text-[56px] leading-[1.05] text-[#0F172A] max-w-4xl mb-8 tracking-tight pointer-events-auto">
+                            <span className="text-xs font-bold text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/20 px-4 py-1.5 rounded-full mb-8 tracking-widest uppercase pointer-events-auto">Say Goodbye to Hour-Long Meetings 👋</span>
+                            <h1 className="font-bold text-[40px] md:text-[56px] leading-[1.05] text-white max-w-4xl mb-8 tracking-tight pointer-events-auto">
                                 Daily Team Syncs, <br/>Without the Chat Drama.
                             </h1>
-                            <p className="text-lg text-[#565e74] max-w-2xl mb-12 leading-relaxed pointer-events-auto">
-                                Briefly transforms messy daily check-ins on WhatsApp or Telegram into structured data. Let our <strong>SyncBot</strong> chase progress reports, while your team focuses on building great things.
+                            <p className="text-lg text-slate-300 max-w-2xl mb-12 leading-relaxed pointer-events-auto">
+                                Briefly transforms messy daily check-ins on WhatsApp or Telegram into structured data. Let our <strong className="text-white">SyncBot</strong> chase progress reports, while your team focuses on building great things.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-6 mb-12 pointer-events-auto">
-                                <Link href={route('register')} className="bg-[#10B981] text-white font-bold px-10 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity shadow-lg shadow-emerald-200 flex items-center justify-center">
+                                <Link href={route('register')} className="bg-[#10B981] text-white font-bold px-10 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center border border-[#10B981]/50">
                                     Try Briefly for Free
                                 </Link>
-                                <button className="grid-border text-[#0F172A] font-bold px-10 py-4 rounded-lg text-lg hover:bg-slate-50 transition-colors bg-white">
+                                <button className="border border-slate-700 text-white font-bold px-10 py-4 rounded-lg text-lg hover:bg-[#1e293b] transition-colors bg-[#0b1120]">
                                     See How It Works
                                 </button>
                             </div>
