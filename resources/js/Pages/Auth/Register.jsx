@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
+import Antigravity from '@/Components/Antigravity';
 
 export default function Register() {
     const [role, setRole] = useState('employee'); // 'employee' | 'manager'
@@ -60,9 +61,26 @@ export default function Register() {
             
             {/* Left Side: Branding */}
             <div className="hidden lg:flex lg:w-[45%] relative bg-[#111827] p-8 flex-col justify-between overflow-hidden">
+                {/* Antigravity Background */}
+                <div className="absolute inset-0 z-0">
+                    <Antigravity
+                        count={400}
+                        magnetRadius={14}
+                        ringRadius={11}
+                        waveSpeed={0.9}
+                        waveAmplitude={0}
+                        particleSize={0.8}
+                        lerpSpeed={0.05}
+                        color="#10B981"
+                        autoAnimate={true}
+                        particleVariance={0}
+                        fieldStrength={9.4}
+                    />
+                </div>
+
                 {/* Geometric Pattern Overlay */}
                 <div 
-                    className="absolute inset-0 opacity-10" 
+                    className="absolute inset-0 opacity-10 z-0 pointer-events-none" 
                     style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)' }}
                 ></div>
                 
