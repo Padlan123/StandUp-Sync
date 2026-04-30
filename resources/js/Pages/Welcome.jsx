@@ -105,80 +105,168 @@ export default function Welcome({ auth }) {
 
                         {/* Overlapping Mockup */}
                         <div className="max-w-wide mx-auto px-6 lg:px-20 -mt-32 md:-mt-48 relative z-10">
-                            <div className="grid-border bg-white rounded-2xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.12)]">
+                            <div className="grid-border bg-[#0F172A] rounded-2xl overflow-hidden shadow-[0_32px_64px_-12px_rgba(0,0,0,0.4)] border border-slate-700 flex flex-col">
                                 {/* Top Bar */}
-                                <div className="grid-border-b h-14 flex items-center justify-between px-6 bg-white">
+                                <div className="h-12 flex items-center justify-between px-6 bg-[#1e293b] border-b border-slate-700">
                                     <div className="flex gap-2">
-                                        <div className="w-3.5 h-3.5 rounded-full bg-red-400"></div>
-                                        <div className="w-3.5 h-3.5 rounded-full bg-yellow-400"></div>
-                                        <div className="w-3.5 h-3.5 rounded-full bg-green-400"></div>
+                                        <div className="w-3.5 h-3.5 rounded-full bg-red-500"></div>
+                                        <div className="w-3.5 h-3.5 rounded-full bg-yellow-500"></div>
+                                        <div className="w-3.5 h-3.5 rounded-full bg-green-500"></div>
                                     </div>
-                                    <div className="text-xs font-mono text-slate-400 bg-slate-100 px-4 py-1.5 rounded-full">briefly.app/dashboard</div>
+                                    <div className="text-xs font-mono text-slate-400 bg-[#0F172A] px-4 py-1.5 rounded-full flex items-center gap-2">
+                                        <svg className="w-3 h-3 text-slate-500" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                                        briefly.app/chat
+                                    </div>
                                     <div className="w-10"></div>
                                 </div>
-                                {/* Dashboard Content */}
-                                <div className="flex flex-col md:flex-row min-h-[600px]">
-                                    <div className="w-full md:w-72 grid-border-r p-8 hidden md:block bg-slate-50/30">
-                                        <div className="space-y-8">
-                                            <div className="h-5 w-28 bg-slate-200/60 rounded-lg"></div>
-                                            <div className="space-y-4">
-                                                <div className="h-3.5 w-full bg-slate-100 rounded"></div>
-                                                <div className="h-3.5 w-4/5 bg-slate-100 rounded"></div>
-                                                <div className="h-3.5 w-full bg-slate-200 rounded"></div>
-                                                <div className="h-3.5 w-2/3 bg-slate-100 rounded"></div>
+                                {/* Chat Content */}
+                                <div className="flex flex-col md:flex-row h-[500px] md:h-[600px] bg-[#0b1120]">
+                                    {/* Sidebar */}
+                                    <div className="w-full md:w-80 border-r border-slate-800 flex-shrink-0 hidden md:flex flex-col bg-[#0F172A]">
+                                        <div className="p-4 border-b border-slate-800">
+                                            <div className="bg-[#1e293b] rounded-lg px-4 py-2 text-sm text-slate-400 flex items-center gap-2 border border-slate-700">
+                                                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                                Search messages
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 overflow-y-auto">
+                                            <div className="px-4 py-3 bg-[#1e293b]/50 border-l-2 border-[#10B981] cursor-pointer">
+                                                <div className="flex items-center justify-between">
+                                                    <h4 className="font-bold text-slate-200">Briefly SyncBot</h4>
+                                                    <span className="text-xs text-slate-500">09:02 AM</span>
+                                                </div>
+                                                <p className="text-sm text-slate-400 truncate mt-1">Status recorded as Blocker.</p>
+                                            </div>
+                                            <div className="px-4 py-3 hover:bg-[#1e293b]/30 cursor-pointer border-l-2 border-transparent transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <h4 className="font-bold text-slate-200"># Engineering Team</h4>
+                                                    <span className="text-xs text-slate-500">Yesterday</span>
+                                                </div>
+                                                <p className="text-sm text-slate-400 truncate mt-1">Alex: I'll review the PRs today.</p>
+                                            </div>
+                                            <div className="px-4 py-3 hover:bg-[#1e293b]/30 cursor-pointer border-l-2 border-transparent transition-colors">
+                                                <div className="flex items-center justify-between">
+                                                    <h4 className="font-bold text-slate-200"># Marketing</h4>
+                                                    <span className="text-xs text-slate-500">Tue</span>
+                                                </div>
+                                                <p className="text-sm text-slate-400 truncate mt-1">Sarah: Campaign is ready to launch!</p>
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="flex-1 p-8 lg:p-14">
-                                        <div className="flex items-center justify-between mb-12">
-                                            <div>
-                                                <h3 className="text-2xl font-bold text-[#0F172A]">Today's Project Health</h3>
-                                                <p className="text-sm text-slate-500 mt-1">Team status automatically extracted from chat.</p>
+                                    
+                                    {/* Chat Area */}
+                                    <div className="flex-1 flex flex-col relative bg-[#0b1120]">
+                                        {/* Chat Header */}
+                                        <div className="h-16 px-6 border-b border-slate-800 flex items-center justify-between bg-[#0F172A]">
+                                            <div className="flex items-center gap-3">
+                                                <div className="relative">
+                                                    <div className="w-10 h-10 rounded-full bg-[#10B981] flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                                                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                                    </div>
+                                                    <div className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-400 border-2 border-[#0F172A] rounded-full"></div>
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-bold text-slate-200">Briefly SyncBot</h3>
+                                                    <p className="text-xs text-emerald-400">Online</p>
+                                                </div>
                                             </div>
-                                            <div className="flex -space-x-3">
-                                                <img alt="avatar" className="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://ui-avatars.com/api/?name=Alex+Rivera&background=random" />
-                                                <img alt="avatar" className="w-10 h-10 rounded-full border-2 border-white object-cover" src="https://ui-avatars.com/api/?name=Jordan+Smith&background=random" />
-                                                <div className="w-10 h-10 rounded-full border-2 border-white bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">+4</div>
+                                            <div className="flex gap-4">
+                                                <svg className="w-5 h-5 text-slate-400 cursor-pointer hover:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                                <svg className="w-5 h-5 text-slate-400 cursor-pointer hover:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" /></svg>
                                             </div>
                                         </div>
-                                        <div className="space-y-6">
-                                            <div className="grid-border rounded-xl p-6 flex items-center justify-between hover:bg-slate-50 transition-all cursor-default">
-                                                <div className="flex items-center gap-5">
-                                                    <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
-                                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-bold text-base text-[#0F172A]">Alex Rivera</p>
-                                                        <p className="text-sm text-slate-500">Finalizing UI authentication flow.</p>
-                                                    </div>
-                                                </div>
-                                                <span className="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Safe</span>
-                                            </div>
-                                            
-                                            <div className="grid-border rounded-xl p-6 flex items-center justify-between border-red-100 bg-red-50/30 hover:bg-red-50/50 transition-all cursor-default">
-                                                <div className="flex items-center gap-5">
-                                                    <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center text-purple-500">
-                                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-bold text-base text-[#0F172A]">Jordan Smith</p>
-                                                        <p className="text-sm text-slate-500">Blocked by CORS issues on the API Gateway.</p>
-                                                    </div>
-                                                </div>
-                                                <span className="bg-red-100 text-red-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Blocker</span>
+                                        
+                                        {/* Chat Messages */}
+                                        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                                            {/* Date separator */}
+                                            <div className="flex justify-center">
+                                                <span className="bg-[#1e293b] border border-slate-700 text-slate-400 text-xs px-3 py-1 rounded-full">Today</span>
                                             </div>
 
-                                            <div className="grid-border rounded-xl p-6 flex items-center justify-between hover:bg-slate-50 transition-all cursor-default">
-                                                <div className="flex items-center gap-5">
-                                                    <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center text-orange-500">
-                                                        <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                            {/* Bot Message */}
+                                            <div className="flex gap-4">
+                                                <div className="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center flex-shrink-0 mt-1">
+                                                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                                </div>
+                                                <div className="max-w-[80%]">
+                                                    <div className="flex items-baseline gap-2 mb-1">
+                                                        <span className="font-bold text-slate-200 text-sm">SyncBot</span>
+                                                        <span className="text-xs text-slate-500">09:00 AM</span>
                                                     </div>
-                                                    <div>
-                                                        <p className="font-bold text-base text-[#0F172A]">Sarah Chen</p>
-                                                        <p className="text-sm text-slate-500">Writing the system documentation.</p>
+                                                    <div className="bg-[#1e293b] text-slate-300 p-4 rounded-2xl rounded-tl-none shadow-sm text-sm leading-relaxed border border-slate-700/50">
+                                                        <p className="mb-2">Good morning team! 👋 It's time for our daily sync.</p>
+                                                        <p className="mb-1 text-slate-400">Please answer briefly:</p>
+                                                        <ul className="list-decimal pl-4 space-y-1 text-slate-400">
+                                                            <li>What did you accomplish yesterday?</li>
+                                                            <li>What are you working on today?</li>
+                                                            <li>Are there any blockers?</li>
+                                                        </ul>
                                                     </div>
                                                 </div>
-                                                <span className="bg-emerald-100 text-emerald-700 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest">Safe</span>
+                                            </div>
+
+                                            {/* User Message */}
+                                            <div className="flex gap-4 flex-row-reverse">
+                                                <div className="w-8 h-8 rounded-full bg-slate-600 flex-shrink-0 overflow-hidden mt-1">
+                                                    <img src="https://ui-avatars.com/api/?name=Jordan+Smith&background=475569&color=fff" alt="User" />
+                                                </div>
+                                                <div className="max-w-[80%]">
+                                                    <div className="flex items-baseline gap-2 mb-1 flex-row-reverse">
+                                                        <span className="font-bold text-slate-200 text-sm">You</span>
+                                                        <span className="text-xs text-slate-500">09:02 AM</span>
+                                                    </div>
+                                                    <div className="bg-[#10B981] text-white p-4 rounded-2xl rounded-tr-none shadow-[0_4px_15px_rgba(16,185,129,0.2)] text-sm leading-relaxed">
+                                                        <p>1. Finished the Auth flow UI.</p>
+                                                        <p>2. Integrating the API Gateway today.</p>
+                                                        <p>3. Yes, hitting CORS errors on staging. Need help from Alex.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Bot Parsing Visualization */}
+                                            <div className="flex gap-4">
+                                                <div className="w-8 h-8 rounded-full bg-[#10B981] flex items-center justify-center flex-shrink-0 mt-1">
+                                                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                                                </div>
+                                                <div className="max-w-[80%] w-full">
+                                                    <div className="flex items-baseline gap-2 mb-1">
+                                                        <span className="font-bold text-slate-200 text-sm">SyncBot</span>
+                                                        <span className="text-xs text-slate-500">09:02 AM</span>
+                                                    </div>
+                                                    <div className="bg-[#1e293b] border border-slate-700 p-4 rounded-2xl rounded-tl-none shadow-sm w-full relative overflow-hidden">
+                                                        <div className="absolute top-0 left-0 w-1 h-full bg-[#10B981]"></div>
+                                                        <div className="flex items-center gap-3 mb-3 border-b border-slate-700 pb-3">
+                                                            <div className="w-5 h-5 rounded-full bg-red-500/20 flex items-center justify-center">
+                                                                <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                                                            </div>
+                                                            <span className="text-sm font-medium text-slate-200">Status automatically parsed</span>
+                                                        </div>
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            <div className="bg-[#0b1120] rounded-lg p-3 border border-slate-800">
+                                                                <p className="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">Status</p>
+                                                                <span className="bg-red-500/10 text-red-400 px-2.5 py-1 rounded-md text-xs font-bold uppercase tracking-wide border border-red-500/20">Blocker</span>
+                                                            </div>
+                                                            <div className="bg-[#0b1120] rounded-lg p-3 border border-slate-800">
+                                                                <p className="text-xs text-slate-500 mb-1 font-semibold uppercase tracking-wider">Mentioned</p>
+                                                                <span className="text-sm text-blue-400">@Alex</span>
+                                                            </div>
+                                                        </div>
+                                                        <p className="text-xs text-slate-400 mt-3 flex items-center gap-1.5">
+                                                            <svg className="w-3.5 h-3.5 text-[#10B981]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                                                            Synced to Team Dashboard
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Chat Input */}
+                                        <div className="p-4 bg-[#0F172A] border-t border-slate-800">
+                                            <div className="relative">
+                                                <input type="text" placeholder="Type your standup report..." className="w-full bg-[#1e293b] border border-slate-700 text-slate-200 rounded-full py-3.5 pl-5 pr-14 focus:outline-none focus:border-[#10B981] focus:ring-1 focus:ring-[#10B981] transition-all" />
+                                                <button className="absolute right-2 top-2 w-9 h-9 rounded-full bg-[#10B981] flex items-center justify-center hover:bg-emerald-400 transition-colors shadow-[0_0_10px_rgba(16,185,129,0.3)]">
+                                                    <svg className="w-4 h-4 text-white ml-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
