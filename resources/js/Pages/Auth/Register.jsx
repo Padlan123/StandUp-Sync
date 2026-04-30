@@ -60,7 +60,7 @@ export default function Register() {
             <Head title="Register" />
             
             {/* Left Side: Branding */}
-            <div className="hidden lg:flex lg:w-[45%] relative bg-[#111827] p-8 flex-col justify-between overflow-hidden">
+            <div className="hidden lg:flex lg:w-1/2 relative bg-[#111827] p-8 flex-col justify-between overflow-hidden">
                 {/* Antigravity Background */}
                 <div className="absolute inset-0 z-0">
                     <Antigravity
@@ -114,7 +114,7 @@ export default function Register() {
             </div>
 
             {/* Right Side: Form */}
-            <div className="w-full lg:w-[55%] flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-y-auto">
                 <div className="w-full max-w-sm space-y-5 py-4">
                     <div>
                         <h2 className="text-2xl font-bold text-[#0F172A]">Create Your Account</h2>
