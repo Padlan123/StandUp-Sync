@@ -20,7 +20,7 @@ export default function Welcome({ auth }) {
                     <div className="flex items-center gap-12">
                         <div className="flex items-center gap-2">
                             {/* Logo */}
-                            <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block dark:hidden" />
+                            <img src="/img/logo/logo-utama-light.svg" alt="Briefly" className="h-6 w-auto block dark:hidden" />
                         </div>
                         <div className="hidden md:flex gap-8">
                             <a className="text-[#10B981] border-b-2 border-[#10B981] pb-1" href="#">Features</a>
@@ -251,7 +251,7 @@ export default function Welcome({ auth }) {
                 </main>
 
                 {/* Footer */}
-                <footer className="w-full border-t border-slate-100 bg-white text-xs tracking-normal text-slate-500 pb-12 relative z-50">
+                <footer className="w-full border-t border-slate-100 bg-white text-xs tracking-normal text-slate-500 pb-12 relative z-[200]">
                     <div className="flex flex-col md:flex-row justify-between items-center px-6 lg:px-20 py-10 max-w-wide mx-auto">
                         <div className="flex items-center gap-2 mb-4 md:mb-0">
                             <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block dark:hidden" />
