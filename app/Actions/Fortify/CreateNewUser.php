@@ -29,7 +29,13 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
         ]);
-        $member->assignRole('member');
+
+        if ($input['role'] === 'manager') {
+            $member->assignRole('manager');
+        } else {
+            $member->assignRole('employee');
+        }
+
         return $member;
     }
 
