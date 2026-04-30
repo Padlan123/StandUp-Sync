@@ -1,8 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Register() {
     const [role, setRole] = useState('employee'); // 'employee' | 'manager'
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null);
+
+    const positionRoles = [
+        "Frontend Developer", "Backend Developer", "Fullstack Developer", 
+        "UI/UX Designer", "Product Manager", "QA Engineer", 
+        "Data Analyst", "Marketing", "Other"
+    ];
 
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         name: '',
@@ -19,6 +29,17 @@ export default function Register() {
         return () => {
             reset('password', 'password_confirmation');
         };
+    }, []);
+
+    // Close dropdown on outside click
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
     // Update role in form data when tab changes
@@ -143,34 +164,71 @@ export default function Register() {
                             {errors.email && <p className="mt-1.5 text-sm text-red-500">{errors.email}</p>}
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        {/* Vertically Stacked Password Fields */}
+                        <div className="space-y-5">
                             <div>
                                 <label htmlFor="password" className="block text-sm font-medium text-[#0F172A]">Password</label>
-                                <input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    value={data.password}
-                                    className="mt-1.5 block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
-                                    autoComplete="new-password"
-                                    onChange={(e) => setData('password', e.target.value)}
-                                    required
-                                />
+                                <div className="relative mt-1.5">
+                                    <input
+                                        id="password"
+                                        type={showPassword ? "text" : "password"}
+                                        name="password"
+                                        value={data.password}
+                                        className="block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none pr-12"
+                                        autoComplete="new-password"
+                                        onChange={(e) => setData('password', e.target.value)}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-[#10B981] transition-colors focus:outline-none"
+                                    >
+                                        {showPassword ? (
+                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                            </svg>
+                                        ) : (
+                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
                                 {errors.password && <p className="mt-1.5 text-sm text-red-500">{errors.password}</p>}
                             </div>
 
                             <div>
                                 <label htmlFor="password_confirmation" className="block text-sm font-medium text-[#0F172A]">Confirm Password</label>
-                                <input
-                                    id="password_confirmation"
-                                    type="password"
-                                    name="password_confirmation"
-                                    value={data.password_confirmation}
-                                    className="mt-1.5 block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
-                                    autoComplete="new-password"
-                                    onChange={(e) => setData('password_confirmation', e.target.value)}
-                                    required
-                                />
+                                <div className="relative mt-1.5">
+                                    <input
+                                        id="password_confirmation"
+                                        type={showConfirmPassword ? "text" : "password"}
+                                        name="password_confirmation"
+                                        value={data.password_confirmation}
+                                        className="block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none pr-12"
+                                        autoComplete="new-password"
+                                        onChange={(e) => setData('password_confirmation', e.target.value)}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 hover:text-[#10B981] transition-colors focus:outline-none"
+                                    >
+                                        {showConfirmPassword ? (
+                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                            </svg>
+                                        ) : (
+                                            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -191,32 +249,50 @@ export default function Register() {
                             </div>
 
                             <div>
-                                <label htmlFor="position" className="block text-sm font-medium text-[#0F172A]">Your Position</label>
-                                <div className="relative mt-1.5">
-                                    <select
-                                        id="position"
-                                        name="position"
-                                        value={data.position}
-                                        className="appearance-none block w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
-                                        onChange={(e) => setData('position', e.target.value)}
-                                        required={role === 'employee'}
+                                <label className="block text-sm font-medium text-[#0F172A]">Your Position</label>
+                                <div className="relative mt-1.5" ref={dropdownRef}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                        className={`flex w-full items-center justify-between px-4 py-3 bg-white border ${isDropdownOpen ? 'border-[#10B981] ring-1 ring-[#10B981]' : 'border-slate-200'} rounded-lg text-left text-[#0F172A] focus:outline-none transition-all`}
                                     >
-                                        <option value="" disabled>Select your role</option>
-                                        <option value="Frontend Developer">Frontend Developer</option>
-                                        <option value="Backend Developer">Backend Developer</option>
-                                        <option value="Fullstack Developer">Fullstack Developer</option>
-                                        <option value="UI/UX Designer">UI/UX Designer</option>
-                                        <option value="Product Manager">Product Manager</option>
-                                        <option value="QA Engineer">QA Engineer</option>
-                                        <option value="Data Analyst">Data Analyst</option>
-                                        <option value="Marketing">Marketing</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                                        <svg className="h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                        <span className={data.position ? 'text-[#0F172A]' : 'text-slate-400'}>
+                                            {data.position || 'Select your role'}
+                                        </span>
+                                        <svg className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                         </svg>
-                                    </div>
+                                    </button>
+
+                                    {/* Custom Dropdown Menu */}
+                                    {isDropdownOpen && (
+                                        <div className="absolute z-50 w-full mt-1.5 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden py-1 max-h-52 overflow-y-auto custom-scrollbar">
+                                            {positionRoles.map((roleOpt) => (
+                                                <button
+                                                    key={roleOpt}
+                                                    type="button"
+                                                    className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
+                                                        data.position === roleOpt 
+                                                            ? 'bg-emerald-50 text-[#10B981] font-medium' 
+                                                            : 'text-[#0F172A] hover:bg-slate-50 hover:text-[#10B981]'
+                                                    }`}
+                                                    onClick={() => {
+                                                        setData('position', roleOpt);
+                                                        setIsDropdownOpen(false);
+                                                    }}
+                                                >
+                                                    {roleOpt}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    )}
+                                    {/* Hidden actual input for native form validation if needed, though Inertia handles submit without it */}
+                                    <input 
+                                        type="hidden" 
+                                        name="position" 
+                                        value={data.position} 
+                                        required={role === 'employee'} 
+                                    />
                                 </div>
                                 {errors.position && <p className="mt-1.5 text-sm text-red-500">{errors.position}</p>}
                             </div>
