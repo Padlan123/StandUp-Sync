@@ -3,12 +3,30 @@ import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Login({ status, canResetPassword }) {
     const [showPassword, setShowPassword] = useState(false);
+    const [displayedText, setDisplayedText] = useState("");
+    const fullText = "Hello briefly Team! 👋";
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,
     });
+
+    useEffect(() => {
+        let i = 0;
+        setDisplayedText("");
+        const typingInterval = setInterval(() => {
+            if (i < fullText.length) {
+                // We use function state update to avoid dependency issues
+                setDisplayedText((prev) => fullText.substring(0, prev.length + 1));
+                i++;
+            } else {
+                clearInterval(typingInterval);
+            }
+        }, 70); // Adjust speed here
+
+        return () => clearInterval(typingInterval);
+    }, [fullText]);
 
     useEffect(() => {
         return () => {
@@ -33,16 +51,15 @@ export default function Login({ status, canResetPassword }) {
                     style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)' }}
                 ></div>
                 
-                <div className="relative z-10 flex items-center gap-2">
-                    {/* Logo briefly */}
-                    <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shadow-lg">
-                        <span className="text-[#10B981] font-bold text-xl">b</span>
-                    </div>
-                    <span className="text-white font-bold text-xl tracking-tight">briefly</span>
+                <div className="relative z-10 flex items-center">
+                    <img src="/img/logo/logo-utama-dark.svg" alt="briefly logo" className="h-8 w-auto" />
                 </div>
 
                 <div className="relative z-10 text-white max-w-lg">
-                    <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">Hello briefly Team! 👋</h1>
+                    <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
+                        {displayedText}
+                        <span className="animate-pulse">|</span>
+                    </h1>
                     <p className="text-sm text-emerald-50/90 leading-relaxed">
                         Turn your daily chaos into synchronized progress. Save time, work better.
                     </p>

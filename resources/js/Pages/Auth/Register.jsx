@@ -66,12 +66,8 @@ export default function Register() {
                     style={{ backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.2) 10px, rgba(255,255,255,0.2) 11px)' }}
                 ></div>
                 
-                <div className="relative z-10 flex items-center gap-2">
-                    {/* Logo briefly */}
-                    <div className="w-8 h-8 rounded-md bg-white flex items-center justify-center shadow-lg">
-                        <span className="text-[#10B981] font-bold text-xl">b</span>
-                    </div>
-                    <span className="text-white font-bold text-xl tracking-tight">briefly</span>
+                <div className="relative z-10 flex items-center">
+                    <img src="/img/logo/logo-utama-dark.svg" alt="briefly logo" className="h-8 w-auto" />
                 </div>
 
                 <div className="relative z-10 text-white w-full max-w-lg">
