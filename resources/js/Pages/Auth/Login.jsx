@@ -54,10 +54,10 @@ export default function Login({ status, canResetPassword }) {
             </div>
 
             {/* Right Side: Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24">
-                <div className="w-full max-w-md space-y-8">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24 overflow-y-auto">
+                <div className="w-full max-w-sm space-y-8">
                     <div>
-                        <h2 className="text-3xl font-bold text-[#0F172A]">Welcome Back!</h2>
+                        <h2 className="text-3xl font-bold text-[#0F172A]">Welcome Back</h2>
                         <p className="mt-2 text-sm text-slate-500">Please sign in to your account.</p>
                     </div>
 

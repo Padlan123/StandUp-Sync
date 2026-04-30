@@ -101,7 +101,7 @@ export default function Register() {
 
             {/* Right Side: Form */}
             <div className="w-full lg:w-[55%] flex items-center justify-center p-8 sm:p-12 lg:p-16 overflow-y-auto">
-                <div className="w-full max-w-md space-y-8 py-8">
+                <div className="w-full max-w-sm space-y-8 py-8">
                     <div>
                         <h2 className="text-3xl font-bold text-[#0F172A]">Create Your Account</h2>
                         <p className="mt-2 text-sm text-slate-500">Choose your role and get started with briefly.</p>
