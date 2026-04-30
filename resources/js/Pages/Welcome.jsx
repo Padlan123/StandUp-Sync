@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MagicRings from '@/Components/MagicRings';
+import BorderGlow from '@/Components/BorderGlow';
 
 export default function Welcome({ auth }) {
     return (
@@ -73,16 +74,29 @@ export default function Welcome({ auth }) {
                         </div>
                         <div className="max-w-wide mx-auto px-6 lg:px-20 pt-24 md:pt-32 pb-48 md:pb-64 flex flex-col items-center text-center relative z-10 pointer-events-none">
                             <span className="text-xs font-bold text-[#10B981] bg-[#10B981]/10 border border-[#10B981]/20 px-4 py-1.5 rounded-full mb-8 tracking-widest uppercase pointer-events-auto">Say Goodbye to Hour-Long Meetings 👋</span>
-                            <h1 className="font-bold text-[40px] md:text-[56px] leading-[1.05] text-white max-w-4xl mb-8 tracking-tight pointer-events-auto">
+                            <h1 className="font-bold text-[56px] md:text-[72px] lg:text-[80px] leading-[1.05] text-white max-w-5xl mb-8 tracking-tight pointer-events-auto">
                                 Daily Team Syncs, <br/>Without the Chat Drama.
                             </h1>
                             <p className="text-lg text-slate-300 max-w-2xl mb-12 leading-relaxed pointer-events-auto">
                                 Briefly transforms messy daily check-ins on WhatsApp or Telegram into structured data. Let our <strong className="text-white">SyncBot</strong> chase progress reports, while your team focuses on building great things.
                             </p>
                             <div className="flex flex-col sm:flex-row gap-6 mb-12 pointer-events-auto">
-                                <Link href={route('register')} className="bg-[#10B981] text-white font-bold px-10 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center border border-[#10B981]/50">
-                                    Try Briefly for Free
-                                </Link>
+                                <BorderGlow
+                                    className="rounded-lg"
+                                    edgeSensitivity={30}
+                                    glowColor="160 84 40"
+                                    backgroundColor="transparent"
+                                    borderRadius={8}
+                                    glowRadius={20}
+                                    glowIntensity={1.0}
+                                    coneSpread={25}
+                                    animated={true}
+                                    colors={['#34d399', '#10B981', '#059669']}
+                                >
+                                    <Link href={route('register')} className="bg-[#10B981] text-white font-bold px-10 py-4 rounded-lg text-lg hover:opacity-90 transition-opacity shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center border border-[#10B981]/50 w-full h-full">
+                                        Try Briefly for Free
+                                    </Link>
+                                </BorderGlow>
                                 <button className="border border-slate-700 text-white font-bold px-10 py-4 rounded-lg text-lg hover:bg-[#1e293b] transition-colors bg-[#0b1120]">
                                     See How It Works
                                 </button>
