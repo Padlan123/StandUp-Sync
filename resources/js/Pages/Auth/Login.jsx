@@ -107,7 +107,7 @@ export default function Login({ status, canResetPassword }) {
                 {/* Antigravity Background */}
                 <div className="absolute inset-0 z-0">
                     <Antigravity
-                        count={400}
+                        count={150}
                         magnetRadius={14}
                         ringRadius={11}
                         waveSpeed={0.9}
