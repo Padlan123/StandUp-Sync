@@ -3,8 +3,12 @@ import { Head, Link, useForm } from '@inertiajs/react';
 
 export default function Login({ status, canResetPassword }) {
     const [showPassword, setShowPassword] = useState(false);
-    const [displayedText, setDisplayedText] = useState("");
-    const fullText = "Hello briefly Team! 👋";
+    const [displayedTitle, setDisplayedTitle] = useState("");
+    const [displayedDesc, setDisplayedDesc] = useState("");
+    const [activeCursor, setActiveCursor] = useState('title'); // 'title' | 'desc'
+    
+    const fullTitle = "Hello briefly Team! 👋";
+    const fullDesc = "Turn your daily chaos into synchronized progress. Save time, work better.";
 
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -13,20 +17,74 @@ export default function Login({ status, canResetPassword }) {
     });
 
     useEffect(() => {
-        let i = 0;
-        setDisplayedText("");
-        const typingInterval = setInterval(() => {
-            if (i < fullText.length) {
-                // We use function state update to avoid dependency issues
-                setDisplayedText((prev) => fullText.substring(0, prev.length + 1));
-                i++;
-            } else {
-                clearInterval(typingInterval);
-            }
-        }, 70); // Adjust speed here
+        let titleIndex = 0;
+        let descIndex = 0;
+        let phase = 'typing_title';
+        let timerId;
+        let isCancelled = false;
 
-        return () => clearInterval(typingInterval);
-    }, [fullText]);
+        const tick = () => {
+            if (isCancelled) return;
+
+            if (phase === 'typing_title') {
+                setActiveCursor('title');
+                if (titleIndex < fullTitle.length) {
+                    titleIndex++;
+                    setDisplayedTitle(fullTitle.substring(0, titleIndex));
+                    timerId = setTimeout(tick, 50);
+                } else {
+                    phase = 'typing_desc';
+                    timerId = setTimeout(tick, 200); // small pause before typing description
+                }
+            } else if (phase === 'typing_desc') {
+                setActiveCursor('desc');
+                if (descIndex < fullDesc.length) {
+                    descIndex++;
+                    setDisplayedDesc(fullDesc.substring(0, descIndex));
+                    timerId = setTimeout(tick, 30); // description types slightly faster
+                } else {
+                    phase = 'waiting';
+                    setActiveCursor('desc');
+                    timerId = setTimeout(() => {
+                        phase = 'deleting_desc';
+                        tick();
+                    }, 4000); // 4 seconds reading time
+                }
+            } else if (phase === 'deleting_desc') {
+                setActiveCursor('desc');
+                if (descIndex > 0) {
+                    descIndex--;
+                    setDisplayedDesc(fullDesc.substring(0, descIndex));
+                    timerId = setTimeout(tick, 15); // fast delete
+                } else {
+                    phase = 'deleting_title';
+                    timerId = setTimeout(tick, 15);
+                }
+            } else if (phase === 'deleting_title') {
+                setActiveCursor('title');
+                if (titleIndex > 0) {
+                    titleIndex--;
+                    setDisplayedTitle(fullTitle.substring(0, titleIndex));
+                    timerId = setTimeout(tick, 15);
+                } else {
+                    phase = 'reset_wait';
+                    setActiveCursor('title');
+                    timerId = setTimeout(() => {
+                        phase = 'typing_title';
+                        tick();
+                    }, 1000); // 1 sec pause before restart
+                }
+            }
+        };
+
+        // Start animation
+        timerId = setTimeout(tick, 500);
+
+        return () => {
+            isCancelled = true;
+            clearTimeout(timerId);
+        };
+    }, []);
 
     useEffect(() => {
         return () => {
@@ -55,13 +113,14 @@ export default function Login({ status, canResetPassword }) {
                     <img src="/img/logo/logo-utama-dark.svg" alt="briefly logo" className="h-8 w-auto" />
                 </div>
 
-                <div className="relative z-10 text-white max-w-lg">
+                <div className="relative z-10 text-white max-w-lg min-h-[140px]">
                     <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-                        {displayedText}
-                        <span className="animate-pulse">|</span>
+                        {displayedTitle}
+                        <span className={`animate-pulse ${activeCursor === 'title' ? 'inline-block' : 'hidden'}`}>|</span>
                     </h1>
-                    <p className="text-sm text-emerald-50/90 leading-relaxed">
-                        Turn your daily chaos into synchronized progress. Save time, work better.
+                    <p className="text-sm text-emerald-50/90 leading-relaxed min-h-[40px]">
+                        {displayedDesc}
+                        <span className={`animate-pulse ${activeCursor === 'desc' ? 'inline-block' : 'hidden'}`}>|</span>
                     </p>
                 </div>
 
