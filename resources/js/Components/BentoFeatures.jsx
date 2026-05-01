@@ -1,11 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     IconRobot, IconMessage, IconLayoutDashboard,
-    IconBuilding, IconClockOff, IconRocket, IconBrandWechat,
-    IconFolder, IconFolderOpen, IconLock, IconCheck, IconX,
-    IconClock, IconCalendarOff, IconZap
+    IconBuilding, IconClockOff, IconRocket, IconBrandWechat
 } from '@tabler/icons-react';
-import { motion, AnimatePresence, useAnimation } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 // ─── Corner Squares ───────────────────────────────────────────────────────────
 const GridSquare = ({ position }) => (
@@ -133,16 +131,14 @@ function WorkspaceVisual() {
                     transition={{ duration: 0.3 }}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border ${openIdx === i ? colorMap[colors[i]] : 'bg-slate-50 border-slate-200 text-slate-500'}`}
                 >
-                    {openIdx === i
-                        ? <IconFolderOpen size={16} className={`text-${colors[i]}-500`} />
-                        : <IconFolder size={16} />}
+                    <span className="text-sm">{openIdx === i ? '📂' : '📁'}</span>
                     <span className="text-xs font-semibold flex-1">{ws.name}</span>
                     <span className="text-[10px] text-slate-400">{ws.members} members</span>
-                    <IconLock size={12} className="text-slate-300" />
+                    <span className="text-slate-300 text-xs">🔒</span>
                 </motion.div>
             ))}
             <div className="flex items-center gap-1.5 mt-3 px-1">
-                <IconCheck size={12} className="text-emerald-500" />
+                <span className="text-emerald-500 text-xs">✓</span>
                 <span className="text-[10px] text-slate-400">Each workspace fully isolated & private</span>
             </div>
         </div>
@@ -220,7 +216,7 @@ function ReadyInMinutesVisual() {
                     className="flex items-center gap-3"
                 >
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center border transition-all duration-300 ${i < done ? 'bg-emerald-500 border-emerald-500' : 'bg-white border-slate-300'}`}>
-                        {i < done && <IconCheck size={11} className="text-white" />}
+                        {i < done && <span className="text-white text-[10px] font-black">✓</span>}
                     </div>
                     <span className={`text-xs font-medium transition-colors duration-300 ${i < done ? 'text-slate-700 line-through decoration-emerald-400' : 'text-slate-400'}`}>
                         {step}
@@ -228,7 +224,7 @@ function ReadyInMinutesVisual() {
                 </motion.div>
             ))}
             <div className="mt-3 flex items-center gap-1.5">
-                <IconZap size={12} className="text-indigo-400" />
+                <IconRocket size={12} className="text-indigo-400" />
                 <span className="text-[10px] text-slate-400">Setup in under 5 minutes</span>
             </div>
         </div>
