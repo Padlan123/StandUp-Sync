@@ -108,18 +108,18 @@ export default function BentoFeatures() {
                     <GridSquare position="-top-1 -right-1" />
                     <GridSquare position="-bottom-1 -left-1" />
                     
-                    <div className="relative z-10 w-full md:w-[45%] flex flex-col h-full justify-center">
+                    <div className="relative z-10 w-full md:max-w-sm flex flex-col h-full justify-center pr-4">
                         <div className="w-14 h-14 bg-orange-500/10 border border-orange-500/20 flex items-center justify-center mb-6">
                             <IconLayoutDashboard className="text-orange-500" size={28} />
                         </div>
-                        <h3 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Bird's-Eye View</h3>
+                        <h3 className="text-3xl font-bold text-slate-900 mb-4 tracking-tight">Team Status at a Glance</h3>
                         <p className="text-slate-500 text-lg leading-relaxed">
-                            See exactly how everyone is doing at a single glance. No more scrolling through endless chat groups to find out what's blocking your team.
+                            See exactly how everyone is doing instantly. No more scrolling through endless chat groups to find out what's blocking your team.
                         </p>
                     </div>
                     
-                    {/* Stacked Dashboard Mockups (Light + Dark) Tucked in Corner */}
-                    <div className="mt-12 md:mt-0 md:absolute md:-bottom-10 md:-right-10 w-full md:w-[500px] h-[300px] relative pointer-events-none">
+                    {/* Stacked Dashboard Mockups (Light + Dark) Tucked further into Corner */}
+                    <div className="mt-12 md:mt-0 md:absolute md:-bottom-10 md:-right-24 w-full md:w-[500px] h-[300px] relative pointer-events-none">
                         
                         {/* Light Mode Mockup (Background) */}
                         <div className="absolute top-2 left-0 w-[420px] bg-slate-50 border border-slate-200 rounded-2xl p-6 shadow-sm transform -rotate-3 group-hover:-rotate-1 group-hover:-translate-y-2 transition-all duration-500 opacity-60">
