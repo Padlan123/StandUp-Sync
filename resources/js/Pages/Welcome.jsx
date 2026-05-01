@@ -3,7 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import MagicRings from '@/Components/MagicRings';
 import BorderGlow from '@/Components/BorderGlow';
 import { FollowerPointerCard } from '@/Components/ui/following-pointer';
-import FeaturesSectionDemo from '@/Components/ui/features-section-demo-2';
+import BentoFeatures from '@/Components/BentoFeatures';
 
 export default function Welcome({ auth }) {
     return (
@@ -289,8 +289,8 @@ export default function Welcome({ auth }) {
                         </FollowerPointerCard>
                     </div>
 
-                    <section className="bg-white pt-64 pb-16">
-                        <FeaturesSectionDemo />
+                    <section className="bg-white pt-48 pb-16">
+                        <BentoFeatures />
                     </section>
 
                     {/* Chat UI Section */}
