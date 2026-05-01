@@ -12,14 +12,52 @@ export const FollowerPointerCard = ({
   const ref = React.useRef(null);
   const [rect, setRect] = useState(null);
   const [isInside, setIsInside] = useState(false);
+  const lastPosition = React.useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (ref.current) {
       setRect(ref.current.getBoundingClientRect());
     }
-  }, []);
+
+    const handleGlobalMouseMove = (e) => {
+      lastPosition.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleScroll = () => {
+      if (ref.current) {
+        const currentRect = ref.current.getBoundingClientRect();
+        setRect(currentRect);
+        
+        const px = lastPosition.current.x;
+        const py = lastPosition.current.y;
+        
+        const isCurrentlyInside = 
+          px >= currentRect.left &&
+          px <= currentRect.right &&
+          py >= currentRect.top &&
+          py <= currentRect.bottom;
+          
+        if (isCurrentlyInside) {
+          setIsInside(true);
+          x.set(px - currentRect.left);
+          y.set(py - currentRect.top);
+        } else {
+          setIsInside(false);
+        }
+      }
+    };
+
+    window.addEventListener("mousemove", handleGlobalMouseMove);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    
+    return () => {
+      window.removeEventListener("mousemove", handleGlobalMouseMove);
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [x, y]);
 
   const handleMouseMove = (e) => {
+    lastPosition.current = { x: e.clientX, y: e.clientY };
     if (rect) {
       x.set(e.clientX - rect.left);
       y.set(e.clientY - rect.top);
