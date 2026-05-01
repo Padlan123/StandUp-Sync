@@ -3,59 +3,33 @@ import {
   IconRobot,
   IconMessage,
   IconLayoutDashboard,
-  IconBuilding,
-  IconMessageCircle,
-  IconWand,
-  IconClockOff,
-  IconRocket
+  IconBuilding
 } from "@tabler/icons-react";
 
 export default function FeaturesSectionDemo() {
   const features = [
     {
-      title: "Auto-SyncBot 09:00 AM",
+      title: "Structured Reporting",
       description:
-        "Sistem otomatis mengingatkan tim untuk melapor setiap jam 09:00 pagi. Tanpa follow-up manual.",
-      icon: <IconRobot />,
+        "Transform messy chat conversations into structured daily progress and blocker reports.",
+      icon: <IconMessage />,
     },
     {
-      title: "Smart Chat Parsing",
+      title: "Automated Daily SyncBot",
       description:
-        "Cukup balas chat secara natural. AI kami mengekstrak status menjadi 'Safe' atau 'Blocker'.",
-      icon: <IconMessage />,
+        "Our bot automatically reminds your team at 09:00 AM every day. No more manual chasing.",
+      icon: <IconRobot />,
     },
     {
       title: "One-Screen Dashboard",
       description:
-        "Manager bisa melihat ringkasan status harian dalam satu layar tanpa scroll grup chat berjam-jam.",
+        "Managers get a complete overview of project health without scrolling through group chats.",
       icon: <IconLayoutDashboard />,
     },
     {
       title: "Multi-Tenant Isolation",
-      description: "Buat Workspace unik untuk berbagai perusahaan/tim dengan pemisahan data yang aman.",
+      description: "Manage multiple companies or teams in one system securely with distinct workspaces.",
       icon: <IconBuilding />,
-    },
-    {
-      title: "In-App Realtime Chat",
-      description: "Pengalaman sinkronisasi tim yang natural dan terintegrasi secara real-time via WebSocket.",
-      icon: <IconMessageCircle />,
-    },
-    {
-      title: "Minimalist & Fast UI",
-      description:
-        "Antarmuka bersih bergaya Notion yang memprioritaskan kecepatan dan kenyamanan Anda.",
-      icon: <IconWand />,
-    },
-    {
-      title: "Zero Endless Meetings",
-      description:
-        "Ucapkan selamat tinggal pada meeting harian (stand-up) yang memakan waktu dan melelahkan.",
-      icon: <IconClockOff />,
-    },
-    {
-      title: "Setup dalam 5 Menit",
-      description: "Dari mendaftar hingga melakukan sinkronisasi pertama hanya membutuhkan waktu 5 menit.",
-      icon: <IconRocket />,
     },
   ];
   return (
