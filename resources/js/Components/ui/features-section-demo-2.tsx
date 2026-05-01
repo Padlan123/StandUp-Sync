@@ -1,61 +1,61 @@
 import { cn } from "@/lib/utils";
 import {
-  IconAdjustmentsBolt,
-  IconCloud,
-  IconCurrencyDollar,
-  IconEaseInOut,
-  IconHeart,
-  IconHelp,
-  IconRouteAltLeft,
-  IconTerminal2,
+  IconRobot,
+  IconMessage,
+  IconLayoutDashboard,
+  IconBuilding,
+  IconMessageCircle,
+  IconWand,
+  IconClockOff,
+  IconRocket
 } from "@tabler/icons-react";
 
 export default function FeaturesSectionDemo() {
   const features = [
     {
-      title: "Built for developers",
+      title: "Auto-SyncBot 09:00 AM",
       description:
-        "Built for engineers, developers, dreamers, thinkers and doers.",
-      icon: <IconTerminal2 />,
+        "Sistem otomatis mengingatkan tim untuk melapor setiap jam 09:00 pagi. Tanpa follow-up manual.",
+      icon: <IconRobot />,
     },
     {
-      title: "Ease of use",
+      title: "Smart Chat Parsing",
       description:
-        "It's as easy as using an Apple, and as expensive as buying one.",
-      icon: <IconEaseInOut />,
+        "Cukup balas chat secara natural. AI kami mengekstrak status menjadi 'Safe' atau 'Blocker'.",
+      icon: <IconMessage />,
     },
     {
-      title: "Pricing like no other",
+      title: "One-Screen Dashboard",
       description:
-        "Our prices are best in the market. No cap, no lock, no credit card required.",
-      icon: <IconCurrencyDollar />,
+        "Manager bisa melihat ringkasan status harian dalam satu layar tanpa scroll grup chat berjam-jam.",
+      icon: <IconLayoutDashboard />,
     },
     {
-      title: "100% Uptime guarantee",
-      description: "We just cannot be taken down by anyone.",
-      icon: <IconCloud />,
+      title: "Multi-Tenant Isolation",
+      description: "Buat Workspace unik untuk berbagai perusahaan/tim dengan pemisahan data yang aman.",
+      icon: <IconBuilding />,
     },
     {
-      title: "Multi-tenant Architecture",
-      description: "You can simply share passwords instead of buying new seats",
-      icon: <IconRouteAltLeft />,
+      title: "In-App Realtime Chat",
+      description: "Pengalaman sinkronisasi tim yang natural dan terintegrasi secara real-time via WebSocket.",
+      icon: <IconMessageCircle />,
     },
     {
-      title: "24/7 Customer Support",
+      title: "Minimalist & Fast UI",
       description:
-        "We are available a 100% of the time. Atleast our AI Agents are.",
-      icon: <IconHelp />,
+        "Antarmuka bersih bergaya Notion yang memprioritaskan kecepatan dan kenyamanan Anda.",
+      icon: <IconWand />,
     },
     {
-      title: "Money back guarantee",
+      title: "Zero Endless Meetings",
       description:
-        "If you donot like EveryAI, we will convince you to like us.",
-      icon: <IconAdjustmentsBolt />,
+        "Ucapkan selamat tinggal pada meeting harian (stand-up) yang memakan waktu dan melelahkan.",
+      icon: <IconClockOff />,
     },
     {
-      title: "And everything else",
-      description: "I just ran out of copy ideas. Accept my sincere apologies",
-      icon: <IconHeart />,
+      title: "Setup dalam 5 Menit",
+      description: "Dari mendaftar hingga melakukan sinkronisasi pertama hanya membutuhkan waktu 5 menit.",
+      icon: <IconRocket />,
     },
   ];
   return (
@@ -81,9 +81,9 @@ const Feature = ({
   return (
     <div
       className={cn(
-        "flex flex-col lg:border-r  py-10 relative group/feature dark:border-neutral-800",
-        (index === 0 || index === 4) && "lg:border-l dark:border-neutral-800",
-        index < 4 && "lg:border-b dark:border-neutral-800"
+        "flex flex-col lg:border-r border-slate-200 py-10 relative group/feature dark:border-slate-800",
+        (index === 0 || index === 4) && "lg:border-l border-slate-200 dark:border-slate-800",
+        index < 4 && "lg:border-b border-slate-200 dark:border-slate-800"
       )}
     >
       {index < 4 && (
