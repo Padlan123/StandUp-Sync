@@ -3,6 +3,7 @@ import { Head, Link } from '@inertiajs/react';
 import MagicRings from '@/Components/MagicRings';
 import BorderGlow from '@/Components/BorderGlow';
 import { FollowerPointerCard } from '@/Components/ui/following-pointer';
+import FeaturesSectionDemo from '@/Components/ui/features-section-demo-2';
 
 export default function Welcome({ auth }) {
     return (
@@ -289,28 +290,7 @@ export default function Welcome({ auth }) {
                     </div>
 
                     <section className="bg-white pt-64 pb-16">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-w-wide mx-auto px-6 lg:px-0">
-                            <div className="grid-border p-10 lg:p-16 hover:bg-slate-50 transition-colors group">
-                                <svg className="text-[#10B981] w-8 h-8 mb-8 group-hover:scale-110 transition-transform block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                                <h4 className="font-bold text-xl mb-4 text-[#0F172A]">Auto-SyncBot 09:00 AM</h4>
-                                <p className="text-base text-[#565e74] leading-relaxed">Our system automatically reminds the entire team to report every morning at 09:00 AM. No more manual follow-ups.</p>
-                            </div>
-                            <div className="grid-border lg:border-l-0 p-10 lg:p-16 hover:bg-slate-50 transition-colors group">
-                                <svg className="text-[#10B981] w-8 h-8 mb-8 group-hover:scale-110 transition-transform block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
-                                <h4 className="font-bold text-xl mb-4 text-[#0F172A]">Smart Chat Parsing</h4>
-                                <p className="text-base text-[#565e74] leading-relaxed">Just reply naturally. Our engine smartly extracts the context and flags your status as "Safe" or "Blocker".</p>
-                            </div>
-                            <div className="grid-border lg:border-l-0 p-10 lg:p-16 hover:bg-slate-50 transition-colors group">
-                                <svg className="text-[#10B981] w-8 h-8 mb-8 group-hover:scale-110 transition-transform block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" /></svg>
-                                <h4 className="font-bold text-xl mb-4 text-[#0F172A]">One-Screen Dashboard</h4>
-                                <p className="text-base text-[#565e74] leading-relaxed">Managers can instantly see who needs help today from a single dashboard, without endlessly scrolling through group chats.</p>
-                            </div>
-                            <div className="grid-border lg:border-l-0 p-10 lg:p-16 hover:bg-slate-50 transition-colors group">
-                                <svg className="text-[#10B981] w-8 h-8 mb-8 group-hover:scale-110 transition-transform block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                                <h4 className="font-bold text-xl mb-4 text-[#0F172A]">Multi-Tenant Isolation</h4>
-                                <p className="text-base text-[#565e74] leading-relaxed">Create distinct Workspaces with a Unique Company Code. Manage multiple teams centrally with 100% data isolation.</p>
-                            </div>
-                        </div>
+                        <FeaturesSectionDemo />
                     </section>
 
                     {/* Chat UI Section */}
