@@ -20,3 +20,11 @@ Route::get('/auth/google', function () {
 })->name('google.login');
 
 Route::get('/auth/google/callback', [GoogleController::class, 'handleCallback']);
+
+Route::get('/login', function () {
+    return Inertia::render('Auth/Login');
+})->name('login');
+
+Route::get('/register', function () {
+    return Inertia::render('Auth/Register');
+})->name('register');
