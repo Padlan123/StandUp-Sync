@@ -30,10 +30,10 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        if ($input['role'] === 'manager') {
-            $member->assignRole('manager');
+        if ($input['role'] === 'member') {
+            $member->assignRole('member');
         } else {
-            $member->assignRole('employee');
+            $member->assignRole('owner');
         }
 
         return $member;
