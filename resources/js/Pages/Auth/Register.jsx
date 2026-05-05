@@ -3,7 +3,7 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import Antigravity from '@/Components/Antigravity';
 
 export default function Register() {
-    const [role, setRole] = useState('employee'); // 'employee' | 'manager'
+    const [role, setRole] = useState('owner'); // 'owner' | 'member'
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
-        role: 'employee',
+        role: 'owner',
         invitation_code: '',
         position: '',
         company_name: '',
@@ -96,12 +96,12 @@ export default function Register() {
                             <span className="text-xs font-medium text-emerald-50 tracking-wide uppercase">Daily Stand-up Bot</span>
                         </div>
                         <h2 className="text-2xl font-bold mb-2 leading-tight text-white">
-                            {role === 'employee' 
+                            {role === 'owner' 
                                 ? 'Synchronize your daily work in seconds.' 
                                 : 'Manage your team effortlessly.'}
                         </h2>
                         <p className="text-emerald-100/90 text-sm leading-relaxed">
-                            {role === 'employee'
+                            {role === 'owner'
                                 ? 'Join briefly to keep your team aligned without the endless meetings. Experience the fastest way to report progress and unblock tasks.'
                                 : 'Create your workspace and get a bird\'s-eye view of your entire team\'s progress without micromanaging.'}
                         </p>
@@ -125,25 +125,25 @@ export default function Register() {
                     <div className="flex p-1 bg-slate-100 rounded-lg">
                         <button
                             type="button"
-                            onClick={() => handleRoleChange('employee')}
+                            onClick={() => handleRoleChange('owner')}
                             className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
-                                role === 'employee' 
+                                role === 'owner' 
                                     ? 'bg-white text-[#10B981] shadow-sm ring-1 ring-slate-200/50' 
                                     : 'text-slate-500 hover:text-slate-700'
                             }`}
                         >
-                            Employee
+                            Owner
                         </button>
                         <button
                             type="button"
-                            onClick={() => handleRoleChange('manager')}
+                            onClick={() => handleRoleChange('member')}
                             className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-all duration-200 ${
-                                role === 'manager' 
+                                role === 'member' 
                                     ? 'bg-white text-[#10B981] shadow-sm ring-1 ring-slate-200/50' 
                                     : 'text-slate-500 hover:text-slate-700'
                             }`}
                         >
-                            Manager
+                            Member
                         </button>
                     </div>
 
@@ -246,8 +246,8 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Employee Specific Fields */}
-                        <div className={`space-y-3 transition-all duration-300 ${role === 'employee' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+                        {/* Owner Specific Fields */}
+                        <div className={`space-y-3 transition-all duration-300 ${role === 'owner' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
                             <div>
                                 <label htmlFor="invitation_code" className="block text-xs font-medium text-[#0F172A]">Company Invitation Code</label>
                                 <input
@@ -257,7 +257,7 @@ export default function Register() {
                                     className="mt-1 block w-full px-3 py-2 bg-emerald-50/50 border border-[#10B981]/40 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none placeholder:text-emerald-700/40"
                                     placeholder="e.g. BRF-2026-XYZ"
                                     onChange={(e) => setData('invitation_code', e.target.value)}
-                                    required={role === 'employee'}
+                                    required={role === 'owner'}
                                 />
                                 {errors.invitation_code && <p className="mt-1 text-xs text-red-500">{errors.invitation_code}</p>}
                             </div>
@@ -304,15 +304,15 @@ export default function Register() {
                                         type="hidden" 
                                         name="position" 
                                         value={data.position} 
-                                        required={role === 'employee'} 
+                                        required={role === 'owner'} 
                                     />
                                 </div>
                                 {errors.position && <p className="mt-1 text-xs text-red-500">{errors.position}</p>}
                             </div>
                         </div>
 
-                        {/* Manager Specific Fields */}
-                        <div className={`space-y-3 transition-all duration-300 ${role === 'manager' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+                        {/* Member Specific Fields */}
+                        <div className={`space-y-3 transition-all duration-300 ${role === 'member' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
                             <div>
                                 <label htmlFor="company_name" className="block text-xs font-medium text-[#0F172A]">Company Name</label>
                                 <input
@@ -322,7 +322,7 @@ export default function Register() {
                                     className="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
                                     placeholder="Your organization name"
                                     onChange={(e) => setData('company_name', e.target.value)}
-                                    required={role === 'manager'}
+                                    required={role === 'member'}
                                 />
                                 {errors.company_name && <p className="mt-1 text-xs text-red-500">{errors.company_name}</p>}
                             </div>
@@ -339,7 +339,7 @@ export default function Register() {
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             ) : (
-                                role === 'employee' ? 'Join your workspace' : 'Create Workspace'
+                                role === 'owner' ? 'Join your workspace' : 'Create Workspace'
                             )}
                         </button>
                     </form>

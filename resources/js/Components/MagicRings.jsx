@@ -167,11 +167,23 @@ export default function MagicRings({
     const ro = new ResizeObserver(resize);
     ro.observe(mount);
 
-    const onMouseMove = (e) => {
-      const rect = mount.getBoundingClientRect();
-      mouseRef.current[0] = (e.clientX - rect.left) / rect.width - 0.5;
-      mouseRef.current[1] = -((e.clientY - rect.top) / rect.height - 0.5);
+    const globalMouse = { x: 0, y: 0 };
+    const onGlobalMouseMove = (e) => {
+      globalMouse.x = e.clientX;
+      globalMouse.y = e.clientY;
+      updateMouseCoords(e.clientX, e.clientY);
     };
+
+    const updateMouseCoords = (clientX, clientY) => {
+      const rect = mount.getBoundingClientRect();
+      mouseRef.current[0] = (clientX - rect.left) / rect.width - 0.5;
+      mouseRef.current[1] = -((clientY - rect.top) / rect.height - 0.5);
+    };
+
+    const onScroll = () => {
+      updateMouseCoords(globalMouse.x, globalMouse.y);
+    };
+
     const onMouseEnter = () => { isHoveredRef.current = true; };
     const onMouseLeave = () => {
       isHoveredRef.current = false;
@@ -180,7 +192,8 @@ export default function MagicRings({
     };
     const onClick = () => { burstRef.current = 1; };
 
-    mount.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mousemove', onGlobalMouseMove);
+    window.addEventListener('scroll', onScroll, { passive: true });
     mount.addEventListener('mouseenter', onMouseEnter);
     mount.addEventListener('mouseleave', onMouseLeave);
     mount.addEventListener('click', onClick);
@@ -237,8 +250,9 @@ export default function MagicRings({
       cancelAnimationFrame(frameId);
       observer.disconnect();
       window.removeEventListener('resize', resize);
+      window.removeEventListener('mousemove', onGlobalMouseMove);
+      window.removeEventListener('scroll', onScroll);
       ro.disconnect();
-      mount.removeEventListener('mousemove', onMouseMove);
       mount.removeEventListener('mouseenter', onMouseEnter);
       mount.removeEventListener('mouseleave', onMouseLeave);
       mount.removeEventListener('click', onClick);

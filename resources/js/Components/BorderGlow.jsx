@@ -91,13 +91,15 @@ const BorderGlow = ({
     return degrees;
   }, [getCenterOfElement]);
 
-  const handlePointerMove = useCallback((e) => {
+  const lastPosition = useRef({ x: 0, y: 0 });
+
+  const updateGlow = useCallback((clientX, clientY) => {
     const card = cardRef.current;
     if (!card) return;
 
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = clientX - rect.left;
+    const y = clientY - rect.top;
 
     const edge = getEdgeProximity(card, x, y);
     const angle = getCursorAngle(card, x, y);
@@ -105,6 +107,27 @@ const BorderGlow = ({
     card.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`);
     card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
   }, [getEdgeProximity, getCursorAngle]);
+
+  useEffect(() => {
+    const handleGlobalMouseMove = (e) => {
+      lastPosition.current = { x: e.clientX, y: e.clientY };
+    };
+    const handleScroll = () => {
+      updateGlow(lastPosition.current.x, lastPosition.current.y);
+    };
+
+    window.addEventListener('mousemove', handleGlobalMouseMove);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [updateGlow]);
+
+  const handlePointerMove = useCallback((e) => {
+    lastPosition.current = { x: e.clientX, y: e.clientY };
+    updateGlow(e.clientX, e.clientY);
+  }, [updateGlow]);
 
   useEffect(() => {
     if (!animated || !cardRef.current) return;
