@@ -30,10 +30,8 @@ class CreateNewUser implements CreatesNewUsers
             'password' => Hash::make($input['password']),
         ]);
 
-        if ($input['role'] === 'manager') {
-            $member->assignRole('manager');
-        } else {
-            $member->assignRole('employee');
+        if ($input['role']) {
+            $member->assignRole($input['role']);
         }
 
         return $member;
@@ -50,6 +48,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
+            'role' => ['nullable', 'string', 'in:manager,employee'],
         ];
     }
 
@@ -67,6 +66,7 @@ class CreateNewUser implements CreatesNewUsers
             'password.string' => 'password harus berupa string',
             'password.min' => 'password harus minimal 8 karakter',
             'password.confirmed' => 'konfirmasi password tidak cocok',
+            'role.in' => 'role yang dipilih tidak valid',
         ];
     }
 }
