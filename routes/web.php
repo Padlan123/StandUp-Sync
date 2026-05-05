@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\GroupController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Socialite\Facades\Socialite;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
@@ -14,9 +14,16 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('home');
 });
+Route::middleware(['auth', 'role:manager|employee'])->group(function () {
+    Route::post('/chat/{group}', [ChatController::class, 'store'])->name('send.message');
+});
 
-Route::get('/auth/google', function () {
-    return Socialite::driver('google')->redirect();
-})->name('google.login');
+Route::middleware(['auth', 'role:employee'])->group(function () {
+    Route::post('/group/join', [GroupController::class, 'join'])->name('join.group');
+});
 
-Route::get('/auth/google/callback', [GoogleController::class, 'handleCallback']);
+Route::middleware(['auth', 'role:manager'])->group(function () {
+    Route::post('/group', [GroupController::class, 'store'])->name('create.group');
+});
+
+require __DIR__ . '/Auth/AuthWithGoogle.php';
