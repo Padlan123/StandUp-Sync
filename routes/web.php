@@ -14,15 +14,15 @@ Route::middleware(['auth'])->group(function () {
         return Inertia::render('Dashboard');
     })->name('home');
 });
-Route::middleware(['auth', 'role:manager|employee'])->group(function () {
+Route::middleware(['auth', 'role:owner|member'])->group(function () {
     Route::post('/chat/{group}', [ChatController::class, 'store'])->name('send.message');
 });
 
-Route::middleware(['auth', 'role:employee'])->group(function () {
+Route::middleware(['auth', 'role:member'])->group(function () {
     Route::post('/group/join', [GroupController::class, 'join'])->name('join.group');
 });
 
-Route::middleware(['auth', 'role:manager'])->group(function () {
+Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::post('/group', [GroupController::class, 'store'])->name('create.group');
 });
 
