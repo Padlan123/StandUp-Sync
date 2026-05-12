@@ -48,7 +48,7 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
             ],
             'password' => $this->passwordRules(),
-            'role' => ['nullable', 'string', 'in:manager,employee'],
+            'role' => ['nullable', 'string', 'in:owner,member'],
         ];
     }
 
