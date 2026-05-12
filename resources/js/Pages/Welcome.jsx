@@ -33,7 +33,7 @@ export default function Welcome({ auth }) {
                     </div>
                     <div className="flex items-center gap-4 sm:gap-6">
                         {auth?.user ? (
-                            <Link href={route('dashboard')} className="bg-[#10B981] text-white px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity">
+                            <Link href={route('home')} className="bg-[#10B981] text-white px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity">
                                 My Dashboard
                             </Link>
                         ) : (

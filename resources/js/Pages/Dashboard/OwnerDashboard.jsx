@@ -39,7 +39,16 @@ export default function OwnerDashboard({ auth }) {
             >
                 {/* Sidebar Header */}
                 <div className="flex items-center h-14 px-3 overflow-hidden whitespace-nowrap">
-                    {/* Icon Container for Header Toggle to keep it perfectly aligned with other icons */}
+                    {/* Brand Logo & Name */}
+                    <div className={`flex items-center gap-2 overflow-hidden transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}>
+                        <img src="/img/logo/logo-main.svg" alt="Briefly" className="w-5 h-5 shrink-0" onError={(e) => e.target.style.display = 'none'} />
+                        <span className="font-semibold text-sm">Briefly</span>
+                    </div>
+
+                    {/* Spacer to push toggle to the right */}
+                    <div className="flex-1 transition-all duration-300"></div>
+
+                    {/* Icon Container for Header Toggle */}
                     <div className="w-10 shrink-0 flex items-center justify-center h-full">
                         <button 
                             onClick={() => setIsCollapsed(!isCollapsed)}
@@ -48,12 +57,6 @@ export default function OwnerDashboard({ auth }) {
                         >
                             {isCollapsed ? <IconLayoutSidebarLeftExpand size={18} stroke={1.5} /> : <IconLayoutSidebarLeftCollapse size={18} stroke={1.5} />}
                         </button>
-                    </div>
-                    
-                    {/* Brand Logo & Name */}
-                    <div className={`flex items-center gap-2 overflow-hidden transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100 ml-1'}`}>
-                        <img src="/img/logo/logo-main.svg" alt="Briefly" className="w-5 h-5 shrink-0" onError={(e) => e.target.style.display = 'none'} />
-                        <span className="font-semibold text-sm">Briefly</span>
                     </div>
                 </div>
 
