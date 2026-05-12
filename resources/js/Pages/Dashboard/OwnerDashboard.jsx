@@ -62,14 +62,18 @@ export default function OwnerDashboard({ auth }) {
 
                 {/* Sidebar Actions */}
                 <div className="px-3 py-2 space-y-1">
-                    <button className="flex items-center w-full h-9 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-200 transition-colors overflow-hidden whitespace-nowrap">
+                    <Link
+                        href={route('workspace.create')}
+                        className="flex items-center w-full h-9 text-sm font-medium text-emerald-700 bg-emerald-50 rounded-md hover:bg-emerald-100 transition-colors overflow-hidden whitespace-nowrap"
+                        title={isCollapsed ? 'New Workspace' : ''}
+                    >
                         <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                            <div className="flex items-center justify-center w-5 h-5 bg-slate-200 rounded-full text-slate-600">
+                            <div className="flex items-center justify-center w-5 h-5 bg-emerald-500 rounded-full text-white">
                                 <IconPlus size={14} stroke={2} />
                             </div>
                         </div>
                         <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>New Workspace</span>
-                    </button>
+                    </Link>
 
                     <button className="flex items-center w-full h-9 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-200 transition-colors overflow-hidden whitespace-nowrap">
                         <div className="w-10 shrink-0 flex items-center justify-center h-full">

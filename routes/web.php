@@ -36,6 +36,11 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard/owner', function () {
         return Inertia::render('Dashboard/OwnerDashboard');
     })->name('dashboard.owner');
+
+    Route::get('/workspace/create', function () {
+        return Inertia::render('Dashboard/CreateWorkspace');
+    })->name('workspace.create');
+
     Route::post('/group', [GroupController::class, 'store'])->name('create.group');
 });
 
