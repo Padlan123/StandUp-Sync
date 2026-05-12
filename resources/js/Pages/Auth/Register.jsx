@@ -97,13 +97,13 @@ export default function Register() {
                         </div>
                         <h2 className="text-2xl font-bold mb-2 leading-tight text-white">
                             {role === 'owner' 
-                                ? 'Synchronize your daily work in seconds.' 
-                                : 'Manage your team effortlessly.'}
+                                ? 'Manage your team effortlessly.' 
+                                : 'Synchronize your daily work in seconds.'}
                         </h2>
                         <p className="text-emerald-100/90 text-sm leading-relaxed">
                             {role === 'owner'
-                                ? 'Join briefly to keep your team aligned without the endless meetings. Experience the fastest way to report progress and unblock tasks.'
-                                : 'Create your workspace and get a bird\'s-eye view of your entire team\'s progress without micromanaging.'}
+                                ? 'Create your workspace and get a bird\'s-eye view of your entire team\'s progress without micromanaging.'
+                                : 'Join briefly to keep your team aligned without the endless meetings. Experience the fastest way to report progress and unblock tasks.'}
                         </p>
                     </div>
                 </div>
@@ -246,10 +246,12 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* Owner Specific Fields */}
-                        <div className={`space-y-3 transition-all duration-300 ${role === 'owner' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+                        {/* Member Specific Fields */}
+                        <div className={`space-y-3 transition-all duration-300 ${role === 'member' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
                             <div>
-                                <label htmlFor="invitation_code" className="block text-xs font-medium text-[#0F172A]">Company Invitation Code</label>
+                                <label htmlFor="invitation_code" className="block text-xs font-medium text-[#0F172A]">
+                                    Company Invitation Code <span className="text-gray-400 text-xs ml-1">(optional)</span>
+                                </label>
                                 <input
                                     id="invitation_code"
                                     name="invitation_code"
@@ -257,13 +259,14 @@ export default function Register() {
                                     className="mt-1 block w-full px-3 py-2 bg-emerald-50/50 border border-[#10B981]/40 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none placeholder:text-emerald-700/40"
                                     placeholder="e.g. BRF-2026-XYZ"
                                     onChange={(e) => setData('invitation_code', e.target.value)}
-                                    required={role === 'owner'}
                                 />
                                 {errors.invitation_code && <p className="mt-1 text-xs text-red-500">{errors.invitation_code}</p>}
                             </div>
 
                             <div>
-                                <label className="block text-xs font-medium text-[#0F172A]">Your Position</label>
+                                <label className="block text-xs font-medium text-[#0F172A]">
+                                    Your Position <span className="text-gray-400 text-xs ml-1">(optional)</span>
+                                </label>
                                 <div className="relative mt-1" ref={dropdownRef}>
                                     <button
                                         type="button"
@@ -304,15 +307,14 @@ export default function Register() {
                                         type="hidden" 
                                         name="position" 
                                         value={data.position} 
-                                        required={role === 'owner'} 
                                     />
                                 </div>
                                 {errors.position && <p className="mt-1 text-xs text-red-500">{errors.position}</p>}
                             </div>
                         </div>
 
-                        {/* Member Specific Fields */}
-                        <div className={`space-y-3 transition-all duration-300 ${role === 'member' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
+                        {/* Owner Specific Fields */}
+                        <div className={`space-y-3 transition-all duration-300 ${role === 'owner' ? 'opacity-100 block' : 'opacity-0 hidden'}`}>
                             <div>
                                 <label htmlFor="company_name" className="block text-xs font-medium text-[#0F172A]">Company Name</label>
                                 <input
@@ -322,7 +324,7 @@ export default function Register() {
                                     className="mt-1 block w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm text-[#0F172A] focus:ring-1 focus:ring-[#10B981] focus:border-[#10B981] transition-all outline-none"
                                     placeholder="Your organization name"
                                     onChange={(e) => setData('company_name', e.target.value)}
-                                    required={role === 'member'}
+                                    required={role === 'owner'}
                                 />
                                 {errors.company_name && <p className="mt-1 text-xs text-red-500">{errors.company_name}</p>}
                             </div>
@@ -339,7 +341,7 @@ export default function Register() {
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             ) : (
-                                role === 'owner' ? 'Join your workspace' : 'Create Workspace'
+                                role === 'owner' ? 'Create Workspace' : 'Join your workspace'
                             )}
                         </button>
                     </form>
