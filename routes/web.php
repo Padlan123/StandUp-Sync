@@ -22,7 +22,9 @@ Route::middleware(['auth'])->group(function () {
     })->name('home');
 });
 
-Route::middleware(['auth', 'role:owner|member'])->group(function () {
+Route::middleware(['auth'])->group(function () {
+    // Chat routes
+    Route::get('/chat/{group}', [ChatController::class, 'index'])->name('chat.show');
     Route::post('/chat/{group}', [ChatController::class, 'store'])->name('send.message');
 });
 
