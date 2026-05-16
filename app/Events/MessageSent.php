@@ -16,7 +16,6 @@ class MessageSent implements ShouldBroadcast
 
     /**
      * Buat instance event baru untuk pesan yang dikirim.
-     * Event ini akan di-broadcast ke semua klien yang terhubung ke channel group chat.
      */
     public function __construct(public $message)
     {
@@ -24,16 +23,33 @@ class MessageSent implements ShouldBroadcast
     }
 
     /**
-     * Tentukan channel mana yang akan menerima event ini.
-     * Menggunakan PresenceChannel agar kita bisa tracking siapa saja yang online di group tersebut.
-     * Channel name format: "presence-chat.{group_id}"
-     *
-     * @return array<int, Channel>
+     * Tentukan channel yang akan menerima event ini.
+     * Menggunakan PresenceChannel agar kita bisa tracking siapa yang online.
      */
     public function broadcastOn(): array
     {
         return [
             new PresenceChannel('chat.' . $this->message->group_id),
+        ];
+    }
+
+    /**
+     * Data yang dikirim bersama event ke frontend.
+     */
+    public function broadcastWith(): array
+    {
+        return [
+            'message' => [
+                'id'         => $this->message->id,
+                'content'    => $this->message->content,
+                'user_id'    => $this->message->user_id,
+                'group_id'   => $this->message->group_id,
+                'created_at' => $this->message->created_at,
+                'user'       => [
+                    'id'   => $this->message->user->id,
+                    'name' => $this->message->user->name,
+                ],
+            ],
         ];
     }
 }
