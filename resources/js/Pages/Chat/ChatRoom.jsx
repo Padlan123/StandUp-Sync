@@ -175,7 +175,11 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
             .joining(user => setOnlineUsers(prev => [...prev, user]))
             .leaving(user => setOnlineUsers(prev => prev.filter(u => u.id !== user.id)))
             .listen('MessageSent', e => {
-                setMessages(prev => [...prev, e.message]);
+                setMessages(prev => {
+                    // Cek jika pesan sudah ada
+                    if (prev.some(m => m.id === e.message.id)) return prev;
+                    return [...prev, e.message];
+                });
             });
 
         return () => {
