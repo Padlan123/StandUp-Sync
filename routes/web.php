@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GroupController;
+use App\Services\DiscordService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -42,6 +43,20 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     })->name('workspace.create');
 
     Route::post('/group', [GroupController::class, 'store'])->name('create.group');
+});
+
+Route::get('/test-discord', function (DiscordService $discord) {
+    // ID Channel bisa kamu dapatkan dengan Klik Kanan Channel di Discord > Copy Channel ID
+    // (Pastikan sudah aktifkan Developer Mode di Discord Settings > Advanced)
+    $channelId = '1505198303560732794'; 
+    
+    $response = $discord->sendMessage($channelId, 'Halo tim! Ini pesan percobaan dari sistem Briefly 🚀');
+
+    if ($response->successful()) {
+        return "Berhasil: Pesan terkirim ke Discord!";
+    }
+
+    return "Gagal mengirim pesan: " . $response->body();
 });
 
 require __DIR__ . '/Auth/AuthWithGoogle.php';
