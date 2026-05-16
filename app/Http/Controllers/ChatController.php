@@ -33,7 +33,7 @@ class ChatController extends Controller
             ->values();
 
         // Load semua group yang dimiliki/diikuti user (untuk sidebar)
-        $groups = Auth::user()->groups()->latest()->get();
+        $groups = Auth::user()->groups()->latest('groups.created_at')->get();
 
         return Inertia::render('Chat/ChatRoom', [
             'group'    => $group,
