@@ -8,18 +8,29 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
-    public function store(Request $request)
+    public function store(Request $request, \App\Services\DiscordService $discord)
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
         ]);
 
         $group = Group::create([
             'name' => $request->name,
+            'description' => $request->description,
             'invite_code' => bin2hex(random_bytes(16)),
         ]);
 
         $group->users()->attach(Auth::id());
+
+        // Test Bot Discord: Mengirim notifikasi saat workspace baru dibuat
+        try {
+            $channelId = '1505198303560732794'; // Ganti dengan ID channel yang valid atau dinamis nanti
+            $message = "🏢 **Workspace Baru Dibuat!**\nNama: {$group->name}\nDeskripsi: " . ($group->description ?? '-') . "\nDibuat oleh: " . Auth::user()->name;
+            $discord->sendMessage($channelId, $message);
+        } catch (\Exception $e) {
+            // Abaikan error discord untuk sementara agar tidak mengganggu proses pembuatan workspace
+        }
 
         return back();
     }
