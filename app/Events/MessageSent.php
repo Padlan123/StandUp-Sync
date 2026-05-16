@@ -38,6 +38,8 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastWith(): array
     {
+        $user = $this->message->user;
+
         return [
             'message' => [
                 'id'         => $this->message->id,
@@ -45,9 +47,12 @@ class MessageSent implements ShouldBroadcast
                 'user_id'    => $this->message->user_id,
                 'group_id'   => $this->message->group_id,
                 'created_at' => $this->message->created_at,
-                'user'       => [
-                    'id'   => $this->message->user->id,
-                    'name' => $this->message->user->name,
+                'user'       => $user ? [
+                    'id'   => $user->id,
+                    'name' => $user->name,
+                ] : [
+                    'id'   => null,
+                    'name' => 'SyncBot',
                 ],
             ],
         ];

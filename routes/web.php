@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GroupController;
+use App\Models\Group;
 use App\Services\DiscordService;
+use App\Services\SyncBotService;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -26,6 +28,16 @@ Route::middleware(['auth'])->group(function () {
     // Chat routes
     Route::get('/chat/{group}', [ChatController::class, 'index'])->name('chat.show');
     Route::post('/chat/{group}', [ChatController::class, 'store'])->name('send.message');
+
+    // SyncBot trigger - kirim reminder ke chat + Discord
+    Route::post('/chat/{group}/trigger-standup', function (Group $group, SyncBotService $bot) {
+        // Pastikan user adalah anggota group ini
+        if (!$group->users()->where('user_id', auth()->id())->exists()) {
+            abort(403);
+        }
+        $bot->sendDailyReminder($group);
+        return response()->json(['status' => 'ok']);
+    })->name('bot.trigger-standup');
 });
 
 Route::middleware(['auth', 'role:member'])->group(function () {

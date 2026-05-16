@@ -154,6 +154,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
     const [messages, setMessages] = useState(initialMessages ?? []);
     const [input, setInput] = useState('');
     const [sending, setSending] = useState(false);
+    const [botLoading, setBotLoading] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [sidebarOpen, setSidebarOpen] = useState(true);
     const [showStatusPicker, setShowStatusPicker] = useState(false);
@@ -181,6 +182,19 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
             window.Echo.leave(`chat.${group.id}`);
         };
     }, [group.id]);
+
+    // Trigger SyncBot standup reminder
+    const triggerStandup = async () => {
+        if (botLoading) return;
+        setBotLoading(true);
+        try {
+            await axios.post(route('bot.trigger-standup', group.id));
+        } catch (err) {
+            console.error('Bot trigger failed:', err);
+        } finally {
+            setBotLoading(false);
+        }
+    };
 
     // Kirim pesan via Axios (JSON)
     const sendMessage = async (e) => {
@@ -326,6 +340,21 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
                     </div>
                     <IconUsers size={18} className="text-slate-400" />
                     <IconSettings size={18} className="text-slate-400 cursor-pointer hover:text-slate-700 transition-colors" />
+                    
+                    {/* Bot Trigger Button */}
+                    <button
+                        onClick={triggerStandup}
+                        disabled={botLoading}
+                        className="ml-2 flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg transition-colors border border-indigo-200 disabled:opacity-50 text-xs font-semibold shadow-sm"
+                        title="Panggil SyncBot"
+                    >
+                        {botLoading ? (
+                            <span className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></span>
+                        ) : (
+                            <IconRobot size={16} />
+                        )}
+                        SyncBot
+                    </button>
                 </header>
 
                 {/* Messages Area */}
