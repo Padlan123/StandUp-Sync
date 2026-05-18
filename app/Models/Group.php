@@ -13,6 +13,11 @@ class Group extends Model
         return $this->belongsToMany(User::class, 'group_users');
     }
 
+    public function channels()
+    {
+        return $this->hasMany(Channel::class);
+    }
+
     public function messages()
     {
         return $this->hasMany(Message::class);

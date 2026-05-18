@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from '@inertiajs/react';
 import { 
     IconLayoutSidebarLeftCollapse, 
@@ -14,8 +14,100 @@ import {
     IconMessageCircle, 
     IconDownload,
     IconLogout,
-    IconHash
+    IconHash,
+    IconChevronDown,
+    IconChevronRight,
+    IconDots,
+    IconEdit,
+    IconTrash
 } from '@tabler/icons-react';
+
+function WorkspaceItem({ group, currentGroupId }) {
+    const [isExpanded, setIsExpanded] = useState(true);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    return (
+        <div className="space-y-1">
+            {/* Workspace Header & Actions */}
+            <div className="flex items-center justify-between px-2 mb-1 group relative">
+                <button 
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="flex-1 flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors text-left"
+                >
+                    {isExpanded ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
+                    <span className="truncate">{group.name}</span>
+                </button>
+                
+                {/* 3-dots Menu Button */}
+                <div className="relative" ref={menuRef}>
+                    <button 
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded opacity-0 group-hover:opacity-100 transition-all focus:opacity-100"
+                    >
+                        <IconDots size={14} />
+                    </button>
+                    
+                    {/* Dropdown Menu */}
+                    {isMenuOpen && (
+                        <div className="absolute right-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)] z-50 py-1">
+                            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+                                <IconEdit size={14} className="text-slate-400" />
+                                Edit Workspace
+                            </button>
+                            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+                                <IconPlus size={14} className="text-slate-400" />
+                                Tambah Channel
+                            </button>
+                            <div className="border-t border-slate-100 my-1"></div>
+                            <button className="w-full text-left px-4 py-2 text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2">
+                                <IconArchive size={14} className="text-amber-500" />
+                                Arsipkan Workspace
+                            </button>
+                            <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                                <IconTrash size={14} className="text-red-500" />
+                                Hapus Workspace
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+            
+            {/* Channels List (Collapsible) */}
+            {isExpanded && (
+                <div className="pl-6 space-y-0.5">
+                    {group.channels && group.channels.map(channel => (
+                        <Link 
+                            key={channel.id} 
+                            href={route('chat.show', channel.id)}
+                            className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors truncate ${
+                                false /* logic for current channel here */
+                                    ? 'bg-emerald-50 text-emerald-700 font-medium' 
+                                    : 'text-slate-600 hover:bg-slate-200'
+                            }`}
+                        >
+                            <IconHash size={16} className="text-slate-400" />
+                            {channel.name}
+                        </Link>
+                    ))}
+                    {(!group.channels || group.channels.length === 0) && (
+                        <p className="text-xs text-slate-400 italic px-2 py-1">No channels yet.</p>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
 
 export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentGroupId = null }) {
     const isOwner = auth.user.roles?.includes('owner') || true; // TODO: implement proper role check if needed
@@ -100,27 +192,18 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
                     ))}
                 </nav>
 
-                <div className={`px-5 mt-6 mb-2 overflow-hidden transition-all duration-300 ${isCollapsed ? 'opacity-0 h-0 invisible' : 'opacity-100 visible'}`}>
-                    <div className="flex items-center justify-between">
-                        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">Channels</h3>
+                <div className={`px-5 mt-6 mb-2 transition-all duration-300 ${isCollapsed ? 'opacity-0 h-0 invisible overflow-hidden' : 'opacity-100 visible overflow-visible'}`}>
+                    <div className="flex items-center justify-between mb-2">
+                        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">Workspaces</h3>
                     </div>
-                    <div className="mt-2 space-y-1">
+                    
+                    <div className="space-y-2">
                         {groups.map(group => (
-                            <Link 
-                                key={group.id} 
-                                href={route('chat.show', group.id)} 
-                                className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors truncate ${
-                                    currentGroupId == group.id 
-                                        ? 'bg-emerald-50 text-emerald-700 font-medium' 
-                                        : 'text-slate-600 hover:bg-slate-200'
-                                }`}
-                            >
-                                <IconHash size={16} className={currentGroupId == group.id ? 'text-emerald-600' : 'text-slate-400'} />
-                                {group.name}
-                            </Link>
+                            <WorkspaceItem key={group.id} group={group} currentGroupId={currentGroupId} />
                         ))}
+                        
                         {groups.length === 0 && (
-                            <p className="text-xs text-slate-500 italic px-2">No channels yet.</p>
+                            <p className="text-xs text-slate-500 italic px-2">No workspaces yet.</p>
                         )}
                     </div>
                 </div>

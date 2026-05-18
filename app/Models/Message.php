@@ -20,4 +20,9 @@ class Message extends Model
     {
         return $this->belongsTo(Group::class);
     }
+
+    public function channel()
+    {
+        return $this->belongsTo(Channel::class);
+    }
 }

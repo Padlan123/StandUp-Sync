@@ -43,7 +43,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard/member', function () {
         return Inertia::render('Dashboard/MemberDashboard', [
-            'groups' => auth()->user()->groups
+            'groups' => auth()->user()->groups()->with('channels')->get()
         ]);
     })->name('dashboard.member');
     Route::post('/group/join', [GroupController::class, 'join'])->name('join.group');
@@ -52,13 +52,13 @@ Route::middleware(['auth', 'role:member'])->group(function () {
 Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard/owner', function () {
         return Inertia::render('Dashboard/OwnerDashboard', [
-            'groups' => auth()->user()->groups
+            'groups' => auth()->user()->groups()->with('channels')->get()
         ]);
     })->name('dashboard.owner');
 
     Route::get('/workspace/create', function () {
         return Inertia::render('Dashboard/CreateWorkspace', [
-            'groups' => auth()->user()->groups
+            'groups' => auth()->user()->groups()->with('channels')->get()
         ]);
     })->name('workspace.create');
 
