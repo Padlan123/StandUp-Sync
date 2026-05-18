@@ -1,40 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
+import DashboardSidebar from '@/Components/DashboardSidebar';
 
-export default function MemberDashboard({ auth }) {
+export default function MemberDashboard({ auth, groups }) {
+    const [isCollapsed, setIsCollapsed] = useState(false);
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-gray-950 transition-colors duration-500">
+        <div className="flex h-screen bg-[#FFFFFF] font-sans text-[#0F172A] overflow-hidden">
             <Head title="Member Dashboard" />
-            <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex justify-between h-16">
-                        <div className="flex items-center">
-                            <img src="/img/logo/logo-main.svg" alt="Logo" className="w-8 h-8" />
-                            <span className="ml-3 font-bold text-xl text-gray-900 dark:text-white">StandUp-Sync</span>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-gray-600 dark:text-gray-400">Halo, {auth.user.name} (Member)</span>
-                            <Link
-                                href={route('logout')}
-                                method="post"
-                                as="button"
-                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition-colors"
-                            >
-                                Keluar
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </nav>
 
-            <main className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white dark:bg-gray-900 overflow-hidden shadow-xl sm:rounded-2xl border border-gray-200 dark:border-gray-800">
-                        <div className="p-8">
-                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Dashboard Member</h1>
-                            <p className="mt-4 text-gray-600 dark:text-gray-400">
-                                Anda berhasil masuk sebagai Member! Selamat datang di StandUp-Sync. Di sini Anda bisa melaporkan progres harian Anda.
-                            </p>
+            {/* Sidebar */}
+            <DashboardSidebar 
+                auth={auth} 
+                groups={groups || []} 
+                isCollapsed={isCollapsed} 
+                setIsCollapsed={setIsCollapsed} 
+            />
+
+            {/* Main Content Area */}
+            <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+                <header className="h-14 border-b border-slate-200 flex items-center px-6 lg:hidden shrink-0">
+                    <button onClick={() => setIsCollapsed(false)} className="mr-4">
+                        <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" /></svg>
+                    </button>
+                    <span className="font-semibold text-slate-800">Briefly</span>
+                </header>
+
+                <div className="flex-1 overflow-y-auto p-6 md:p-10">
+                    <div className="max-w-4xl mx-auto">
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-bold text-[#0F172A] tracking-tight">Dashboard Member</h1>
+                            <p className="mt-2 text-slate-500">Anda berhasil masuk sebagai Member! Selamat datang di StandUp-Sync. Di sini Anda bisa melaporkan progres harian Anda.</p>
+                        </div>
+                        
+                        <div className="bg-white border border-slate-200 rounded-xl p-8 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.05)] text-center relative overflow-hidden">
+                            <div className="absolute inset-0 bg-emerald-50/30"></div>
+                            <div className="relative z-10">
+                                <h2 className="text-xl font-semibold text-slate-900">Mulai Kolaborasi</h2>
+                                <p className="mt-2 text-slate-500 max-w-md mx-auto text-sm leading-relaxed">
+                                    Silakan cek channel komunikasi di sidebar sebelah kiri untuk melihat pesan tim dan melaporkan progres harian Anda.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>

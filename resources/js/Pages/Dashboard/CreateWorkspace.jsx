@@ -25,109 +25,10 @@ import {
     IconAlertCircle,
 } from '@tabler/icons-react';
 
-// ─── Sidebar (reusable, copy dari OwnerDashboard) ───────────────────────────
-function Sidebar({ auth, isCollapsed, setIsCollapsed, activeMenu }) {
-    const menuItems = [
-        { name: 'Main Overview', icon: IconHome, href: route('dashboard.owner') },
-        { name: 'SyncBot Control Center', icon: IconRobot, href: '#' },
-        { name: 'Team Management', icon: IconUsers, href: '#' },
-        { name: 'Blocker Radar', icon: IconRadar, href: '#' },
-        { name: 'Daily Report Archive', icon: IconArchive, href: '#' },
-        { name: 'Workspace Settings', icon: IconSettings, href: '#' },
-        { name: 'Communication Channels', icon: IconMessageCircle, href: '#' },
-    ];
-
-    return (
-        <aside
-            className={`flex flex-col border-r border-slate-200 bg-[#F9F9F9] transition-all duration-300 ease-in-out shrink-0 ${isCollapsed ? 'w-16' : 'w-64'}`}
-        >
-            {/* Header */}
-            <div className="flex items-center h-14 px-3 overflow-hidden whitespace-nowrap">
-                <div className={`flex items-center gap-2 overflow-hidden transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}>
-                    <img src="/img/logo/logo-main.svg" alt="Briefly" className="w-5 h-5 shrink-0" onError={(e) => e.target.style.display = 'none'} />
-                    <span className="font-semibold text-sm">Briefly</span>
-                </div>
-                <div className="flex-1 transition-all duration-300"></div>
-                <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                    <button
-                        onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-colors focus:outline-none"
-                    >
-                        {isCollapsed ? <IconLayoutSidebarLeftExpand size={18} stroke={1.5} /> : <IconLayoutSidebarLeftCollapse size={18} stroke={1.5} />}
-                    </button>
-                </div>
-            </div>
-
-            {/* Actions */}
-            <div className="px-3 py-2 space-y-1">
-                <Link
-                    href={route('workspace.create')}
-                    className="flex items-center w-full h-9 text-sm font-medium text-emerald-700 bg-emerald-50 rounded-md hover:bg-emerald-100 transition-colors overflow-hidden whitespace-nowrap"
-                >
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <div className="flex items-center justify-center w-5 h-5 bg-emerald-500 rounded-full text-white">
-                            <IconPlus size={14} stroke={2} />
-                        </div>
-                    </div>
-                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>New Workspace</span>
-                </Link>
-
-                <button className="flex items-center w-full h-9 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-200 transition-colors overflow-hidden whitespace-nowrap">
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <IconSearch size={18} stroke={1.5} className="text-slate-500" />
-                    </div>
-                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>Search</span>
-                </button>
-            </div>
-
-            {/* Nav */}
-            <div className="flex-1 overflow-y-auto py-2">
-                <nav className="px-3 space-y-0.5">
-                    {menuItems.map((item, index) => (
-                        <Link
-                            key={index}
-                            href={item.href}
-                            className={`flex items-center w-full h-9 text-sm rounded-md transition-colors group overflow-hidden whitespace-nowrap ${activeMenu === item.name ? 'bg-slate-200 text-slate-900' : 'text-slate-700 hover:bg-slate-200'}`}
-                            title={isCollapsed ? item.name : ''}
-                        >
-                            <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                                <item.icon size={18} stroke={1.5} className="text-slate-500 group-hover:text-slate-900 transition-colors" />
-                            </div>
-                            <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100 pr-3'}`}>
-                                {item.name}
-                            </span>
-                        </Link>
-                    ))}
-                </nav>
-            </div>
-
-            {/* Footer */}
-            <div className="p-3 border-t border-slate-200 space-y-1 overflow-hidden">
-                <button className="flex items-center w-full h-9 text-sm text-slate-700 rounded-md hover:bg-slate-200 transition-colors whitespace-nowrap">
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <IconDownload size={18} stroke={1.5} className="text-slate-500" />
-                    </div>
-                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>Download App</span>
-                </button>
-                <div className="flex items-center w-full h-9 mt-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer whitespace-nowrap">
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <div className="w-6 h-6 rounded-full bg-[#334155] text-white flex items-center justify-center text-xs font-bold">
-                            {auth.user.name.charAt(0).toUpperCase()}
-                        </div>
-                    </div>
-                    <div className={`flex-1 min-w-0 flex items-center justify-between transition-opacity duration-300 ${isCollapsed ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
-                        <span className="text-sm font-medium text-slate-900 truncate pr-2">{auth.user.name}</span>
-                        <Link href={route('logout')} method="post" as="button" className="text-slate-400 hover:text-red-500 p-1 rounded-md transition-colors shrink-0 mr-1" title="Logout">
-                            <IconLogout size={14} stroke={1.5} />
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </aside>
-    );
-}
+import DashboardSidebar from '@/Components/DashboardSidebar';
 
 // ─── Step indicator ──────────────────────────────────────────────────────────
+
 function StepIndicator({ step, currentStep, label }) {
     const isCompleted = currentStep > step;
     const isActive = currentStep === step;
@@ -149,7 +50,7 @@ function StepIndicator({ step, currentStep, label }) {
 }
 
 // ─── Main Page ───────────────────────────────────────────────────────────────
-export default function CreateWorkspace({ auth, flash }) {
+export default function CreateWorkspace({ auth, flash, groups }) {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [step, setStep] = useState(1);
     const [copied, setCopied] = useState(false);
@@ -192,7 +93,12 @@ export default function CreateWorkspace({ auth, flash }) {
             <Head title="Create Workspace — Briefly" />
 
             {/* Sidebar */}
-            <Sidebar auth={auth} isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} activeMenu="" />
+            <DashboardSidebar 
+                auth={auth} 
+                groups={groups || []} 
+                isCollapsed={isCollapsed} 
+                setIsCollapsed={setIsCollapsed} 
+            />
 
             {/* Main */}
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">

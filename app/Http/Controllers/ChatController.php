@@ -52,7 +52,7 @@ class ChatController extends Controller
 
         // 2. Validasi input pesan
         $request->validate([
-            'message' => 'required|string|max:255',
+            'message' => 'required|string|max:2000',
         ]);
 
         // 3. Simpan pesan ke database

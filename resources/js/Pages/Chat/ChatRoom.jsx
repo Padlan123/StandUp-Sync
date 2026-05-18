@@ -19,6 +19,8 @@ import {
     IconBell,
 } from '@tabler/icons-react';
 
+import DashboardSidebar from '@/Components/DashboardSidebar';
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function formatTime(dateStr) {
     const d = new Date(dateStr);
@@ -74,7 +76,8 @@ function BotMessage({ content }) {
                     isReminder
                         ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-slate-700'
                         : 'bg-slate-100 text-slate-700'
-                }`}>
+                }`}
+                style={{ fontFamily: "'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
                     {content}
                 </div>
             </div>
@@ -134,7 +137,8 @@ function ChatMessage({ message, isOwn, showAvatar, prevSameUser }) {
                     isOwn
                         ? 'bg-[#10B981] text-white rounded-tr-sm'
                         : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm'
-                }`}>
+                }`}
+                style={{ fontFamily: "'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
                     {cleanContent}
                     {hasBlocker && <div className="mt-1.5"><StatusBadge status="blocker" /></div>}
                     {hasSafe && <div className="mt-1.5"><StatusBadge status="safe" /></div>}
@@ -156,7 +160,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
     const [sending, setSending] = useState(false);
     const [botLoading, setBotLoading] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [isCollapsed, setIsCollapsed] = useState(false);
     const [showStatusPicker, setShowStatusPicker] = useState(false);
     const bottomRef = useRef(null);
     const inputRef = useRef(null);
@@ -247,77 +251,19 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
             <Head title={`#${group.name} — Briefly`} />
 
             {/* ── LEFT SIDEBAR ── */}
-            <aside className={`flex flex-col bg-[#0F172A] text-slate-300 transition-all duration-300 shrink-0 ${sidebarOpen ? 'w-60' : 'w-0 overflow-hidden'}`}>
-                {/* Workspace header */}
-                <div className="flex items-center justify-between px-4 h-14 border-b border-slate-700/60 shrink-0">
-                    <div className="flex items-center gap-2">
-                        <div className="w-6 h-6 rounded-md bg-[#10B981] flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">B</span>
-                        </div>
-                        <span className="font-semibold text-white text-sm">Briefly</span>
-                    </div>
-                    <IconChevronDown size={15} className="text-slate-400" />
-                </div>
-
-                {/* Nav items */}
-                <div className="px-2 py-3 space-y-0.5 border-b border-slate-700/60">
-                    {[
-                        { icon: IconHome, label: 'Dashboard', href: route('dashboard.owner') },
-                        { icon: IconBell, label: 'Notifikasi', href: '#' },
-                        { icon: IconAt, label: 'Mentions', href: '#' },
-                    ].map(item => (
-                        <Link key={item.label} href={item.href}
-                            className="flex items-center gap-2.5 px-2 py-1.5 text-sm rounded-md text-slate-400 hover:bg-slate-700/50 hover:text-white transition-colors">
-                            <item.icon size={16} />
-                            {item.label}
-                        </Link>
-                    ))}
-                </div>
-
-                {/* Channels / Groups */}
-                <div className="flex-1 overflow-y-auto py-2">
-                    <div className="px-4 pt-2 pb-1 flex items-center justify-between">
-                        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Channels</span>
-                        <Link href={route('workspace.create')}>
-                            <IconPlus size={14} className="text-slate-500 hover:text-white transition-colors" />
-                        </Link>
-                    </div>
-                    {(groups ?? []).map(g => (
-                        <Link
-                            key={g.id}
-                            href={route('chat.show', g.id)}
-                            className={`flex items-center gap-2 px-4 py-1.5 text-sm transition-colors rounded-md mx-2 ${
-                                g.id === group.id
-                                    ? 'bg-slate-700/70 text-white font-medium'
-                                    : 'text-slate-400 hover:bg-slate-700/40 hover:text-slate-200'
-                            }`}
-                        >
-                            <IconHash size={15} />
-                            <span className="truncate">{g.name}</span>
-                        </Link>
-                    ))}
-                </div>
-
-                {/* User footer */}
-                <div className="p-3 border-t border-slate-700/60 flex items-center gap-2">
-                    <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-white text-xs font-bold shrink-0 ${avatarColor(auth.user.name)}`}>
-                        {auth.user.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-white truncate">{auth.user.name}</p>
-                        <p className="text-xs text-slate-500 truncate">{auth.user.email}</p>
-                    </div>
-                    <Link href={route('logout')} method="post" as="button" title="Logout">
-                        <IconLogout size={16} className="text-slate-500 hover:text-red-400 transition-colors" />
-                    </Link>
-                </div>
-            </aside>
+            <DashboardSidebar 
+                auth={auth} 
+                groups={groups || []} 
+                isCollapsed={isCollapsed} 
+                setIsCollapsed={setIsCollapsed} 
+                currentGroupId={group.id}
+            />
 
             {/* ── MAIN AREA ── */}
             <div className="flex-1 flex flex-col min-w-0">
                 {/* Channel Header */}
                 <header className="h-14 bg-white border-b border-slate-200 flex items-center px-4 gap-3 shrink-0 shadow-sm">
-                    <button onClick={() => setSidebarOpen(s => !s)} className="text-slate-500 hover:text-slate-800 transition-colors">
+                    <button onClick={() => setIsCollapsed(s => !s)} className="text-slate-500 hover:text-slate-800 transition-colors md:hidden">
                         <IconHash size={20} />
                     </button>
                     <div className="flex-1 min-w-0">
@@ -437,6 +383,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
                             <textarea
                                 ref={inputRef}
                                 value={input}
+                                maxLength={2000}
                                 onChange={e => setInput(e.target.value)}
                                 onKeyDown={e => {
                                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -459,9 +406,14 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
                             </button>
                         </div>
                     </form>
-                    <p className="text-center text-[11px] text-slate-400 mt-2">
-                        Gunakan <kbd className="bg-slate-100 border border-slate-200 rounded px-1 text-slate-500 font-mono text-[10px]">Shift+Enter</kbd> untuk baris baru
-                    </p>
+                    <div className="flex justify-between items-center mt-2 px-1">
+                        <p className="text-[11px] text-slate-400">
+                            Gunakan <kbd className="bg-slate-100 border border-slate-200 rounded px-1 text-slate-500 font-mono text-[10px]">Shift+Enter</kbd> untuk baris baru
+                        </p>
+                        <p className={`text-[10px] font-medium ${input.length >= 2000 ? 'text-red-500' : input.length > 1800 ? 'text-amber-500' : 'text-slate-400'}`}>
+                            {input.length} / 2000
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

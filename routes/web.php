@@ -42,18 +42,24 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'role:member'])->group(function () {
     Route::get('/dashboard/member', function () {
-        return Inertia::render('Dashboard/MemberDashboard');
+        return Inertia::render('Dashboard/MemberDashboard', [
+            'groups' => auth()->user()->groups
+        ]);
     })->name('dashboard.member');
     Route::post('/group/join', [GroupController::class, 'join'])->name('join.group');
 });
 
 Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::get('/dashboard/owner', function () {
-        return Inertia::render('Dashboard/OwnerDashboard');
+        return Inertia::render('Dashboard/OwnerDashboard', [
+            'groups' => auth()->user()->groups
+        ]);
     })->name('dashboard.owner');
 
     Route::get('/workspace/create', function () {
-        return Inertia::render('Dashboard/CreateWorkspace');
+        return Inertia::render('Dashboard/CreateWorkspace', [
+            'groups' => auth()->user()->groups
+        ]);
     })->name('workspace.create');
 
     Route::post('/group', [GroupController::class, 'store'])->name('create.group');
