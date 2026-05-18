@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import MagicRings from '@/Components/MagicRings';
 import BorderGlow from '@/Components/BorderGlow';
 import { FollowerPointerCard } from '@/Components/ui/following-pointer';
 import BentoFeatures from '@/Components/BentoFeatures';
+import {
+  Navbar,
+  NavBody,
+  NavItems,
+  MobileNav,
+  NavbarLogo,
+  NavbarButton,
+  MobileNavHeader,
+  MobileNavToggle,
+  MobileNavMenu,
+} from "@/Components/ui/resizable-navbar";
 
 export default function Welcome({ auth }) {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const navItems = [
+        { name: "Features", link: "#features" },
+        { name: "How it Works", link: "#how-it-works" },
+        { name: "Pricing", link: "#pricing" },
+    ];
+
     return (
         <>
             <Head title="Briefly - Daily Stand-ups, Without the Endless Meetings" />
@@ -18,34 +36,93 @@ export default function Welcome({ auth }) {
             `}} />
 
             <div className="antialiased font-sans text-slate-800 bg-white selection:bg-[#10B981] selection:text-white">
-                {/* TopNavBar */}
-                <nav className="fixed top-0 w-full z-50 border-b border-[#1e293b] bg-[#0F172A] flex items-center justify-between px-6 lg:px-20 h-16 text-sm font-medium tracking-tight">
-                    <div className="flex items-center gap-12">
-                        <div className="flex items-center gap-2">
-                            {/* Logo */}
-                            <img src="/img/logo/logo-utama-dark.svg" alt="Briefly" className="h-6 w-auto block" />
+                {/* Resizable TopNavBar */}
+                <Navbar>
+                    {/* Desktop Navigation */}
+                    <NavBody>
+                        <NavbarLogo />
+                        <NavItems items={navItems} />
+                        <div className="flex items-center gap-4 sm:gap-6">
+                            {auth?.user ? (
+                                <NavbarButton as={Link} href={route('home')} variant="primary">
+                                    My Dashboard
+                                </NavbarButton>
+                            ) : (
+                                <>
+                                    <NavbarButton as={Link} href={route('login')} variant="secondary" className="hidden sm:inline-block">
+                                        Log In
+                                    </NavbarButton>
+                                    <NavbarButton as={Link} href={route('register')} variant="primary">
+                                        Get Started
+                                    </NavbarButton>
+                                </>
+                            )}
                         </div>
-                        <div className="hidden md:flex gap-8">
-                            <a className="text-[#10B981] border-b-2 border-[#10B981] pb-1" href="#">Features</a>
-                            <a className="text-slate-400 hover:text-white transition-colors duration-200" href="#">How it Works</a>
-                            <a className="text-slate-400 hover:text-white transition-colors duration-200" href="#">Pricing</a>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4 sm:gap-6">
-                        {auth?.user ? (
-                            <Link href={route('home')} className="bg-[#10B981] text-white px-6 py-2 rounded-lg font-bold hover:opacity-90 transition-opacity">
-                                My Dashboard
-                            </Link>
-                        ) : (
-                            <>
-                                <Link href={route('login')} className="text-slate-400 hover:text-white px-4 py-2 transition-colors hidden sm:block">Log In</Link>
-                                <Link href={route('register')} className="bg-[#10B981] text-white px-6 py-2 rounded-lg font-bold active:scale-[0.98] transition-transform shadow-sm border border-[#10B981]/50 shadow-[0_0_15px_rgba(16,185,129,0.2)]">Get Started</Link>
-                            </>
-                        )}
-                    </div>
-                </nav>
+                    </NavBody>
 
-                <main className="pt-16">
+                    {/* Mobile Navigation */}
+                    <MobileNav>
+                        <MobileNavHeader>
+                            <NavbarLogo />
+                            <MobileNavToggle
+                                isOpen={isMobileMenuOpen}
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                            />
+                        </MobileNavHeader>
+
+                        <MobileNavMenu
+                            isOpen={isMobileMenuOpen}
+                            onClose={() => setIsMobileMenuOpen(false)}
+                        >
+                            {navItems.map((item, idx) => (
+                                <a
+                                    key={`mobile-link-${idx}`}
+                                    href={item.link}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className="relative text-slate-300 hover:text-white font-medium text-lg py-2 block w-full border-b border-slate-800/60"
+                                >
+                                    {item.name}
+                                </a>
+                            ))}
+                            <div className="flex w-full flex-col gap-4 mt-6">
+                                {auth?.user ? (
+                                    <NavbarButton
+                                        as={Link}
+                                        href={route('home')}
+                                        onClick={() => setIsMobileMenuOpen(false)}
+                                        variant="primary"
+                                        className="w-full"
+                                    >
+                                        My Dashboard
+                                    </NavbarButton>
+                                ) : (
+                                    <>
+                                        <NavbarButton
+                                            as={Link}
+                                            href={route('login')}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            variant="dark"
+                                            className="w-full border border-slate-700 py-3"
+                                        >
+                                            Log In
+                                        </NavbarButton>
+                                        <NavbarButton
+                                            as={Link}
+                                            href={route('register')}
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                            variant="primary"
+                                            className="w-full py-3"
+                                        >
+                                            Get Started
+                                        </NavbarButton>
+                                    </>
+                                )}
+                            </div>
+                        </MobileNavMenu>
+                    </MobileNav>
+                </Navbar>
+
+                <main>
                     {/* Hero Section */}
                     <section className="bg-[#0F172A] relative">
                         {/* Magic Rings Background */}
