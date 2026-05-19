@@ -58,6 +58,68 @@ function avatarColor(name) {
     return colors[Math.abs(hash) % colors.length];
 }
 
+// Helper untuk parsing Markdown sederhana dari response Bot
+function parseItalic(text) {
+    if (!text) return '';
+    const parts = text.split(/(\*.*?\*)/g);
+    return parts.map((part, i) => {
+        if (part.startsWith('*') && part.endsWith('*')) {
+            return <em key={i} className="italic">{part.substring(1, part.length - 1)}</em>;
+        }
+        return part;
+    });
+}
+
+function parseInlineMarkdown(text) {
+    if (!text) return '';
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+            const boldText = part.substring(2, part.length - 2);
+            return <strong key={i} className="font-semibold text-slate-900">{parseItalic(boldText)}</strong>;
+        }
+        return <span key={i}>{parseItalic(part)}</span>;
+    });
+}
+
+function renderMarkdown(text) {
+    if (!text) return null;
+    const lines = text.split('\n');
+    
+    return lines.map((line, index) => {
+        // Headers
+        if (line.startsWith('### ')) {
+            return <h3 key={index} className="text-sm font-bold text-slate-900 mt-3 mb-1 first:mt-0">{parseInlineMarkdown(line.substring(4))}</h3>;
+        }
+        if (line.startsWith('## ')) {
+            return <h2 key={index} className="text-base font-bold text-slate-900 mt-4 mb-1 first:mt-0">{parseInlineMarkdown(line.substring(3))}</h2>;
+        }
+        if (line.startsWith('# ')) {
+            return <h1 key={index} className="text-lg font-bold text-slate-900 mt-4 mb-2 first:mt-0">{parseInlineMarkdown(line.substring(2))}</h1>;
+        }
+        
+        // List items (e.g. * atau - atau 1.)
+        const listMatch = line.match(/^([*\-]\s|\d+\.\s)(.*)/);
+        if (listMatch) {
+            const content = listMatch[2];
+            return (
+                <div key={index} className="flex items-start gap-2 ml-1.5 my-1">
+                    <span className="text-emerald-500 font-bold shrink-0 select-none">•</span>
+                    <span className="flex-1 text-slate-700">{parseInlineMarkdown(content)}</span>
+                </div>
+            );
+        }
+        
+        // Baris kosong
+        if (line.trim() === '') {
+            return <div key={index} className="h-2" />;
+        }
+        
+        // Paragraf biasa
+        return <p key={index} className="my-1 text-slate-700 leading-relaxed">{parseInlineMarkdown(line)}</p>;
+    });
+}
+
 // ─── Bot Message Renderer ─────────────────────────────────────────────────────
 function BotMessage({ content }) {
     const isReminder = content.includes('Apa progresmu') || content.includes('SyncBot');
@@ -72,13 +134,13 @@ function BotMessage({ content }) {
                     <span className="text-[11px] text-slate-400">{formatTime(new Date().toISOString())}</span>
                     <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">BOT</span>
                 </div>
-                <div className={`text-sm leading-relaxed rounded-xl px-4 py-3 inline-block max-w-md ${
+                <div className={`text-sm leading-relaxed rounded-2xl px-4 py-3.5 inline-block max-w-2xl border shadow-sm ${
                     isReminder
-                        ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-slate-700'
-                        : 'bg-slate-100 text-slate-700'
+                        ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border-emerald-200 text-slate-700'
+                        : 'bg-white border-slate-200 text-slate-700'
                 }`}
                 style={{ fontFamily: "'gg sans', 'Noto Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif" }}>
-                    {content}
+                    {renderMarkdown(content)}
                 </div>
             </div>
         </div>
@@ -133,7 +195,7 @@ function ChatMessage({ message, isOwn, showAvatar, prevSameUser }) {
                         <span className="text-[11px] text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity">{formatTime(message.created_at)}</span>
                     </div>
                 )}
-                <div className={`relative rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm ${
+                <div className={`relative rounded-2xl px-4 py-2.5 text-sm leading-relaxed shadow-sm whitespace-pre-wrap ${
                     isOwn
                         ? 'bg-[#10B981] text-white rounded-tr-sm'
                         : 'bg-white border border-slate-200 text-slate-800 rounded-tl-sm'
@@ -170,6 +232,17 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages, isBotTyping]);
+
+    // Safety timeout agar typing indicator bot tidak menggantung selamanya
+    useEffect(() => {
+        if (!isBotTyping) return;
+
+        const timer = setTimeout(() => {
+            setIsBotTyping(false);
+        }, 30000); // 30 detik safety timeout
+
+        return () => clearTimeout(timer);
+    }, [isBotTyping]);
 
     // Setup Laravel Echo — listen ke PresenceChannel
     useEffect(() => {

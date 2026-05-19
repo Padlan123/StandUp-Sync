@@ -72,6 +72,9 @@ Rangkum menjadi 3 bagian utama:
             if ($aiResponse) {
                 // Kirim respons kembali ke channel via SyncBotService
                 $bot->sendMessage($this->channel, $aiResponse);
+            } else {
+                // Kirim pesan fallback jika response dari Gemini null
+                $bot->sendMessage($this->channel, "⚠️ Maaf, saya sedang mengalami gangguan koneksi ke layanan AI (503 Service Unavailable) saat mencoba memproses permintaanmu. Silakan coba beberapa saat lagi.");
             }
         } catch (\Exception $e) {
             Log::error('Gagal memproses ProcessAiBotResponseJob: ' . $e->getMessage());
