@@ -74,7 +74,11 @@ class ChatController extends Controller
 
         // Integrasi AI: Deteksi jika pesan diawali dengan '@SyncBot'
         $messageContent = trim($request->message);
+        $botProcessing = false;
+        
         if (stripos($messageContent, '@SyncBot') === 0) {
+            $botProcessing = true;
+            
             // Ambil histori chat untuk konteks (misal 20 pesan terakhir sebelum pesan ini)
             // Note: Pesan terbaru sudah masuk ke DB di baris 65
             $history = $channel->messages()
@@ -105,6 +109,7 @@ class ChatController extends Controller
         // 5. Return response JSON agar front-end bisa langsung render pesan sendiri
         return response()->json([
             'message' => $message->load('user'),
+            'bot_processing' => $botProcessing
         ]);
     }
 }

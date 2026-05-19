@@ -159,16 +159,17 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
     const [input, setInput] = useState('');
     const [sending, setSending] = useState(false);
     const [botLoading, setBotLoading] = useState(false);
+    const [isBotTyping, setIsBotTyping] = useState(false);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [showStatusPicker, setShowStatusPicker] = useState(false);
     const bottomRef = useRef(null);
     const inputRef = useRef(null);
 
-    // Auto-scroll ke bawah saat ada pesan baru
+    // Auto-scroll ke bawah saat ada pesan baru atau bot mengetik
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [messages]);
+    }, [messages, isBotTyping]);
 
     // Setup Laravel Echo — listen ke PresenceChannel
     useEffect(() => {
@@ -179,6 +180,11 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
             .joining(user => setOnlineUsers(prev => [...prev, user]))
             .leaving(user => setOnlineUsers(prev => prev.filter(u => u.id !== user.id)))
             .listen('MessageSent', e => {
+                // Matikan typing indicator jika pesan dari bot
+                if (e.message.user_id === null || e.message.user?.name === 'SyncBot') {
+                    setIsBotTyping(false);
+                }
+
                 setMessages(prev => {
                     // Cek jika pesan sudah ada
                     if (prev.some(m => m.id === e.message.id)) return prev;
@@ -195,10 +201,12 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
     const triggerStandup = async () => {
         if (botLoading) return;
         setBotLoading(true);
+        setIsBotTyping(true);
         try {
             await axios.post(route('bot.trigger-standup', channel.id));
         } catch (err) {
             console.error('Bot trigger failed:', err);
+            setIsBotTyping(false);
         } finally {
             setBotLoading(false);
         }
@@ -227,6 +235,11 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
             const res = await axios.post(route('send.message', channel.id), { message: text });
             // Ganti optimistic dengan data dari server
             setMessages(prev => prev.map(m => m.id === optimistic.id ? res.data.message : m));
+            
+            // Aktifkan bot typing indicator jika request butuh processing AI
+            if (res.data.bot_processing) {
+                setIsBotTyping(true);
+            }
         } catch (err) {
             // Hapus optimistic jika gagal
             setMessages(prev => prev.filter(m => m.id !== optimistic.id));
@@ -346,6 +359,27 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
                             })}
                         </div>
                     ))}
+
+                    {isBotTyping && (
+                        <div className="flex items-start gap-3 px-4 py-2 mx-2 animate-in fade-in duration-300">
+                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center shrink-0 shadow-md shadow-emerald-200">
+                                <IconRobot size={18} className="text-white animate-pulse" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-baseline gap-2 mb-1">
+                                    <span className="text-sm font-semibold text-emerald-600">SyncBot</span>
+                                    <span className="text-[11px] text-slate-400">sedang mengetik...</span>
+                                    <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full font-medium">BOT</span>
+                                </div>
+                                <div className="bg-slate-100 border border-slate-200 text-slate-500 rounded-2xl rounded-tl-sm px-4 py-3.5 flex items-center gap-1.5 w-fit shadow-sm">
+                                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div ref={bottomRef} />
                 </div>
 
