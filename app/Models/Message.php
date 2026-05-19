@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use App\Models\Group;
 use App\Models\User;
 
-#[Fillable(['content', 'user_id', 'group_id'])]
+#[Fillable(['content', 'user_id', 'group_id', 'channel_id'])]
 class Message extends Model
 {
     public function user()

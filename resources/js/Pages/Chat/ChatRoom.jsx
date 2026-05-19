@@ -154,7 +154,7 @@ function ChatMessage({ message, isOwn, showAvatar, prevSameUser }) {
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export default function ChatRoom({ auth, group, messages: initialMessages, groups }) {
+export default function ChatRoom({ auth, group, channel, messages: initialMessages, groups }) {
     const [messages, setMessages] = useState(initialMessages ?? []);
     const [input, setInput] = useState('');
     const [sending, setSending] = useState(false);
@@ -174,7 +174,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
     useEffect(() => {
         if (!window.Echo) return;
 
-        const channel = window.Echo.join(`chat.${group.id}`)
+        const channelSub = window.Echo.join(`chat.${channel.id}`)
             .here(users => setOnlineUsers(users))
             .joining(user => setOnlineUsers(prev => [...prev, user]))
             .leaving(user => setOnlineUsers(prev => prev.filter(u => u.id !== user.id)))
@@ -187,16 +187,16 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
             });
 
         return () => {
-            window.Echo.leave(`chat.${group.id}`);
+            window.Echo.leave(`chat.${channel.id}`);
         };
-    }, [group.id]);
+    }, [channel.id]);
 
     // Trigger SyncBot standup reminder
     const triggerStandup = async () => {
         if (botLoading) return;
         setBotLoading(true);
         try {
-            await axios.post(route('bot.trigger-standup', group.id));
+            await axios.post(route('bot.trigger-standup', channel.id));
         } catch (err) {
             console.error('Bot trigger failed:', err);
         } finally {
@@ -224,7 +224,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
         setMessages(prev => [...prev, optimistic]);
 
         try {
-            const res = await axios.post(route('send.message', group.id), { message: text });
+            const res = await axios.post(route('send.message', channel.id), { message: text });
             // Ganti optimistic dengan data dari server
             setMessages(prev => prev.map(m => m.id === optimistic.id ? res.data.message : m));
         } catch (err) {
@@ -248,7 +248,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
 
     return (
         <div className="flex h-screen bg-[#F1F5F4] font-sans text-[#0F172A] overflow-hidden">
-            <Head title={`#${group.name} — Briefly`} />
+            <Head title={`#${channel.name} — Briefly`} />
 
             {/* ── LEFT SIDEBAR ── */}
             <DashboardSidebar 
@@ -256,7 +256,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
                 groups={groups || []} 
                 isCollapsed={isCollapsed} 
                 setIsCollapsed={setIsCollapsed} 
-                currentGroupId={group.id}
+                currentChannelId={channel.id}
             />
 
             {/* ── MAIN AREA ── */}
@@ -267,9 +267,9 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
                         <IconHash size={20} />
                     </button>
                     <div className="flex-1 min-w-0">
-                        <h1 className="font-semibold text-slate-800 text-base truncate">{group.name}</h1>
-                        {group.description && (
-                            <p className="text-xs text-slate-500 truncate">{group.description}</p>
+                        <h1 className="font-semibold text-slate-800 text-base truncate">{channel.name}</h1>
+                        {channel.description && (
+                            <p className="text-xs text-slate-500 truncate">{channel.description}</p>
                         )}
                     </div>
 
@@ -391,7 +391,7 @@ export default function ChatRoom({ auth, group, messages: initialMessages, group
                                         sendMessage(e);
                                     }
                                 }}
-                                placeholder={`Kirim pesan ke #${group.name}... (Enter untuk kirim, Shift+Enter untuk baris baru)`}
+                                placeholder={`Kirim pesan ke #${channel.name}... (Enter untuk kirim, Shift+Enter untuk baris baru)`}
                                 rows={1}
                                 className="flex-1 resize-none bg-transparent text-sm text-slate-800 placeholder:text-slate-400 outline-none py-2 max-h-40 leading-relaxed"
                                 style={{ fieldSizing: 'content' }}

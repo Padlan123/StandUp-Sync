@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GroupController;
+use App\Models\Channel;
 use App\Models\Group;
 use App\Services\DiscordService;
 use App\Services\SyncBotService;
@@ -26,16 +27,17 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     // Chat routes
-    Route::get('/chat/{group}', [ChatController::class, 'index'])->name('chat.show');
-    Route::post('/chat/{group}', [ChatController::class, 'store'])->name('send.message');
+    Route::get('/chat/{channel}', [ChatController::class, 'index'])->name('chat.show');
+    Route::post('/chat/{channel}', [ChatController::class, 'store'])->name('send.message');
 
     // SyncBot trigger - kirim reminder ke chat + Discord
-    Route::post('/chat/{group}/trigger-standup', function (Group $group, SyncBotService $bot) {
+    Route::post('/chat/{channel}/trigger-standup', function (Channel $channel, SyncBotService $bot) {
+        $group = $channel->group;
         // Pastikan user adalah anggota group ini
         if (!$group->users()->where('user_id', auth()->id())->exists()) {
             abort(403);
         }
-        $bot->sendDailyReminder($group);
+        $bot->sendDailyReminder($channel);
         return response()->json(['status' => 'ok']);
     })->name('bot.trigger-standup');
 });

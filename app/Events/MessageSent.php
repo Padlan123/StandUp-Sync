@@ -29,7 +29,7 @@ class MessageSent implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new PresenceChannel('chat.' . $this->message->group_id),
+            new PresenceChannel('chat.' . $this->message->channel_id),
         ];
     }
 

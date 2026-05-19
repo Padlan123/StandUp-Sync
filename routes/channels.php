@@ -1,13 +1,13 @@
 <?php
 
+use App\Models\Channel;
 use App\Models\Group;
-// use App\Models\User;
 use Illuminate\Support\Facades\Broadcast;
 
-Broadcast::channel('chat.{group}', function ($user, $group) {
-    $group = Group::find($group->id);
+Broadcast::channel('chat.{channel}', function ($user, Channel $channel) {
+    $group = $channel->group;
     if ($group && $group->users()->where('user_id', $user->id)->exists()) {
-        return ['id' => $user->id, 'name' => $user->name, 'role' => $user->getRoleNames()->first()];
+        return ['id' => $user->id, 'name' => $user->name, 'role' => $user->getRoleNames()->first() ?? 'member'];
     }
     return false;
 });

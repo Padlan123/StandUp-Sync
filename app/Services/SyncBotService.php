@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Events\MessageSent;
+use App\Models\Channel;
 use App\Models\Group;
 use App\Models\Message;
 
@@ -13,17 +14,20 @@ class SyncBotService
     /**
      * Kirim pesan bot ke chat room (web) + Discord channel secara bersamaan.
      *
-     * @param Group  $group     Workspace/group tujuan
-     * @param string $content   Isi pesan
+     * @param Channel $channel   Channel tujuan
+     * @param string  $content   Isi pesan
      * @param string|null $discordChannelId  Discord channel ID (opsional, pakai default jika kosong)
      */
-    public function sendMessage(Group $group, string $content, ?string $discordChannelId = null): Message
+    public function sendMessage(Channel $channel, string $content, ?string $discordChannelId = null): Message
     {
+        $group = $channel->group;
+
         // 1. Simpan pesan bot ke database (user_id = null = BOT)
         $message = Message::create([
-            'group_id' => $group->id,
-            'user_id'  => null,
-            'content'  => $content,
+            'group_id'   => $group->id,
+            'channel_id' => $channel->id,
+            'user_id'    => null,
+            'content'    => $content,
         ]);
 
         // Tambahkan data bot ke relasi user agar frontend bisa render dengan benar
@@ -47,12 +51,12 @@ class SyncBotService
     }
 
     /**
-     * Kirim pengingat stand-up harian ke semua group yang aktif.
+     * Kirim pengingat stand-up harian ke channel yang aktif.
      */
-    public function sendDailyReminder(Group $group): Message
+    public function sendDailyReminder(Channel $channel): Message
     {
         $content = "⏰ **Waktunya Stand-up!**\n\nHai tim! Ceritakan progres kamu hari ini:\n1. Apa yang sudah kamu kerjakan?\n2. Apa yang akan kamu kerjakan hari ini?\n3. Ada kendala? Tandai dengan `[BLOCKER]`\n\nKalau semua lancar, cukup balas dengan `[SAFE]` 🟢";
 
-        return $this->sendMessage($group, $content);
+        return $this->sendMessage($channel, $content);
     }
 }

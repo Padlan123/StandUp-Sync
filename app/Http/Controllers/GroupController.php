@@ -24,6 +24,12 @@ class GroupController extends Controller
 
         $group->users()->attach(Auth::id());
 
+        // Create default general channel
+        $channel = $group->channels()->create([
+            'name' => 'general',
+            'description' => 'General discussion channel',
+        ]);
+
         // Notifikasi Discord saat workspace baru dibuat
         try {
             $channelId = '1505198303560732794';
@@ -33,8 +39,8 @@ class GroupController extends Controller
             // Abaikan error discord agar tidak mengganggu alur utama
         }
 
-        // Redirect ke halaman chat workspace yang baru dibuat
-        return redirect()->route('chat.show', $group->id);
+        // Redirect ke halaman chat channel yang baru dibuat
+        return redirect()->route('chat.show', $channel->id);
     }
 
     public function join(Request $request)
@@ -50,8 +56,14 @@ class GroupController extends Controller
             if (!$group->users()->where('user_id', Auth::id())->exists()) {
                 $group->users()->attach(Auth::id());
             }
-            // Redirect langsung ke halaman chat group
-            return redirect()->route('chat.show', $group->id);
+
+            // Find general channel or first channel or create general if none exists
+            $channel = $group->channels()->where('name', 'general')->first()
+                ?? $group->channels()->first()
+                ?? $group->channels()->create(['name' => 'general', 'description' => 'General discussion channel']);
+
+            // Redirect langsung ke halaman chat channel
+            return redirect()->route('chat.show', $channel->id);
         }
 
         return back()->withErrors(['invite_code' => 'Invite code tidak valid.']);

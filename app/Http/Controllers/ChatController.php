@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\MessageSent;
+use App\Models\Channel;
 use App\Models\Group;
 use App\Models\Message;
 use Illuminate\Http\Request;
@@ -13,18 +14,20 @@ use Inertia\Inertia;
 class ChatController extends Controller
 {
     /**
-     * Tampilkan halaman chat untuk sebuah group
+     * Tampilkan halaman chat untuk sebuah channel
      */
-    public function index(Group $group)
+    public function index(Channel $channel)
     {
+        $group = $channel->group;
+
         // Pastikan user adalah member dari group ini
         $isMember = $group->users()->where('user_id', Auth::id())->exists();
         if (!$isMember) {
             abort(403, 'Kamu bukan anggota workspace ini.');
         }
 
-        // Load 50 pesan terakhir beserta relasi user-nya
-        $messages = $group->messages()
+        // Load 50 pesan terakhir di channel ini beserta relasi user-nya
+        $messages = $channel->messages()
             ->with('user')
             ->latest()
             ->limit(50)
@@ -32,10 +35,11 @@ class ChatController extends Controller
             ->reverse()
             ->values();
 
-        // Load semua group yang dimiliki/diikuti user (untuk sidebar)
-        $groups = Auth::user()->groups()->latest('groups.created_at')->get();
+        // Load semua group yang dimiliki/diikuti user dengan relasi channels
+        $groups = Auth::user()->groups()->with('channels')->latest('groups.created_at')->get();
 
         return Inertia::render('Chat/ChatRoom', [
+            'channel'  => $channel,
             'group'    => $group,
             'messages' => $messages,
             'groups'   => $groups,
@@ -45,8 +49,10 @@ class ChatController extends Controller
     /**
      * Simpan pesan baru dan broadcast ke channel
      */
-    public function store(Request $request, Group $group)
+    public function store(Request $request, Channel $channel)
     {
+        $group = $channel->group;
+
         // 1. Cek otorisasi: user harus member dari group ini
         Gate::authorize('send', [Message::class, $group]);
 
@@ -57,13 +63,14 @@ class ChatController extends Controller
 
         // 3. Simpan pesan ke database
         $message = Message::create([
-            'group_id' => $group->id,
-            'user_id'  => Auth::id(),
-            'content'  => $request->message
+            'group_id'   => $group->id,
+            'channel_id' => $channel->id,
+            'user_id'    => Auth::id(),
+            'content'    => $request->message
         ]);
 
-        // 4. Broadcast event ke semua klien yang terhubung ke channel group ini
-        broadcast(new MessageSent($message->load('user', 'group')))->toOthers();
+        // 4. Broadcast event ke semua klien yang terhubung ke channel ini
+        broadcast(new MessageSent($message->load('user', 'group', 'channel')))->toOthers();
 
         // 5. Return response JSON agar front-end bisa langsung render pesan sendiri
         return response()->json([

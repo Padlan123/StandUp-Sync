@@ -22,7 +22,7 @@ import {
     IconTrash
 } from '@tabler/icons-react';
 
-function WorkspaceItem({ group, currentGroupId }) {
+function WorkspaceItem({ group, currentChannelId }) {
     const [isExpanded, setIsExpanded] = useState(true);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
@@ -91,7 +91,7 @@ function WorkspaceItem({ group, currentGroupId }) {
                             key={channel.id} 
                             href={route('chat.show', channel.id)}
                             className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors truncate ${
-                                false /* logic for current channel here */
+                                channel.id === currentChannelId
                                     ? 'bg-emerald-50 text-emerald-700 font-medium' 
                                     : 'text-slate-600 hover:bg-slate-200'
                             }`}
@@ -109,7 +109,7 @@ function WorkspaceItem({ group, currentGroupId }) {
     );
 }
 
-export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentGroupId = null }) {
+export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentChannelId = null }) {
     const isOwner = auth.user.roles?.includes('owner') || true; // TODO: implement proper role check if needed
     
     // We can define base menu items
@@ -199,7 +199,7 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
                     
                     <div className="space-y-2">
                         {groups.map(group => (
-                            <WorkspaceItem key={group.id} group={group} currentGroupId={currentGroupId} />
+                            <WorkspaceItem key={group.id} group={group} currentChannelId={currentChannelId} />
                         ))}
                         
                         {groups.length === 0 && (
