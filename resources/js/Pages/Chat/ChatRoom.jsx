@@ -225,8 +225,10 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [showStatusPicker, setShowStatusPicker] = useState(false);
+    const [showBotMenu, setShowBotMenu] = useState(false);
     const bottomRef = useRef(null);
     const inputRef = useRef(null);
+    const botMenuRef = useRef(null);
 
     // Auto-scroll ke bawah saat ada pesan baru atau bot mengetik
     useEffect(() => {
@@ -243,6 +245,17 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
 
         return () => clearTimeout(timer);
     }, [isBotTyping]);
+
+    // Tutup menu bot ketika klik di luar menu
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (botMenuRef.current && !botMenuRef.current.contains(e.target)) {
+                setShowBotMenu(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     // Setup Laravel Echo — listen ke PresenceChannel
     useEffect(() => {
@@ -275,6 +288,7 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
         if (botLoading) return;
         setBotLoading(true);
         setIsBotTyping(true);
+        setShowBotMenu(false);
         try {
             await axios.post(route('bot.trigger-standup', channel.id));
         } catch (err) {
@@ -282,6 +296,36 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
             setIsBotTyping(false);
         } finally {
             setBotLoading(false);
+        }
+    };
+
+    // Kirim prompt aksi cepat seolah-olah diketik oleh pengguna
+    const sendQuickAction = async (text) => {
+        if (!text || sending) return;
+        
+        setShowBotMenu(false);
+        setSending(true);
+
+        const optimistic = {
+            id: `tmp-${Date.now()}`,
+            content: text,
+            user_id: auth.user.id,
+            user: auth.user,
+            created_at: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, optimistic]);
+
+        try {
+            const res = await axios.post(route('send.message', channel.id), { message: text });
+            setMessages(prev => prev.map(m => m.id === optimistic.id ? res.data.message : m));
+            if (res.data.bot_processing) {
+                setIsBotTyping(true);
+            }
+        } catch (err) {
+            setMessages(prev => prev.filter(m => m.id !== optimistic.id));
+        } finally {
+            setSending(false);
+            inputRef.current?.focus();
         }
     };
 
@@ -377,20 +421,56 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
                     <IconUsers size={18} className="text-slate-400" />
                     <IconSettings size={18} className="text-slate-400 cursor-pointer hover:text-slate-700 transition-colors" />
                     
-                    {/* Bot Trigger Button */}
-                    <button
-                        onClick={triggerStandup}
-                        disabled={botLoading}
-                        className="ml-2 flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg transition-colors border border-indigo-200 disabled:opacity-50 text-xs font-semibold shadow-sm"
-                        title="Panggil SyncBot"
-                    >
-                        {botLoading ? (
-                            <span className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></span>
-                        ) : (
-                            <IconRobot size={16} />
+                    {/* Bot Trigger Button with Dropdown */}
+                    <div className="relative" ref={botMenuRef}>
+                        <button
+                            onClick={() => setShowBotMenu(!showBotMenu)}
+                            disabled={botLoading}
+                            className="ml-2 flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-600 rounded-lg transition-colors border border-indigo-200 disabled:opacity-50 text-xs font-semibold shadow-sm"
+                            title="Tindakan Cepat SyncBot"
+                        >
+                            {botLoading ? (
+                                <span className="w-4 h-4 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin"></span>
+                            ) : (
+                                <IconRobot size={16} />
+                            )}
+                            <span className="hidden sm:inline">SyncBot</span>
+                            <IconChevronDown size={14} className={`transition-transform ${showBotMenu ? 'rotate-180' : ''}`} />
+                        </button>
+
+                        {/* Dropdown Menu */}
+                        {showBotMenu && (
+                            <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50 animate-in fade-in slide-in-from-top-2">
+                                <div className="px-3 pb-2 mb-2 border-b border-slate-100">
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Aksi Pintar AI</p>
+                                </div>
+                                
+                                <button 
+                                    onClick={triggerStandup}
+                                    className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-indigo-50 text-sm text-slate-700 transition-colors"
+                                >
+                                    <IconMessage size={16} className="text-indigo-500" />
+                                    <span>Pengingat Stand-up</span>
+                                </button>
+                                
+                                <button 
+                                    onClick={() => sendQuickAction('@SyncBot Tolong berikan ringkasan eksekutif (executive summary) dari laporan stand-up tim hari ini.')}
+                                    className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-emerald-50 text-sm text-slate-700 transition-colors"
+                                >
+                                    <IconRobot size={16} className="text-emerald-500" />
+                                    <span>Buat Rangkuman Harian</span>
+                                </button>
+                                
+                                <button 
+                                    onClick={() => sendQuickAction('@SyncBot Tolong analisis semua obrolan dan buat daftar siapa saja yang sedang mengalami blocker/hambatan hari ini.')}
+                                    className="w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-rose-50 text-sm text-slate-700 transition-colors"
+                                >
+                                    <IconAlertTriangle size={16} className="text-rose-500" />
+                                    <span>Deteksi Blocker Tim</span>
+                                </button>
+                            </div>
                         )}
-                        SyncBot
-                    </button>
+                    </div>
                 </header>
 
                 {/* Messages Area */}

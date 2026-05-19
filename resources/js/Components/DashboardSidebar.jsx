@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { 
     IconLayoutSidebarLeftCollapse, 
     IconLayoutSidebarLeftExpand, 
@@ -11,7 +11,6 @@ import {
     IconRadar, 
     IconArchive, 
     IconSettings, 
-    IconMessageCircle, 
     IconDownload,
     IconLogout,
     IconHash,
@@ -19,7 +18,9 @@ import {
     IconChevronRight,
     IconDots,
     IconEdit,
-    IconTrash
+    IconTrash,
+    IconX,
+    IconArrowRight,
 } from '@tabler/icons-react';
 
 function WorkspaceItem({ group, currentChannelId }) {
@@ -39,7 +40,6 @@ function WorkspaceItem({ group, currentChannelId }) {
 
     return (
         <div className="space-y-1">
-            {/* Workspace Header & Actions */}
             <div className="flex items-center justify-between px-2 mb-1 group relative">
                 <button 
                     onClick={() => setIsExpanded(!isExpanded)}
@@ -49,7 +49,6 @@ function WorkspaceItem({ group, currentChannelId }) {
                     <span className="truncate">{group.name}</span>
                 </button>
                 
-                {/* 3-dots Menu Button */}
                 <div className="relative" ref={menuRef}>
                     <button 
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -58,7 +57,6 @@ function WorkspaceItem({ group, currentChannelId }) {
                         <IconDots size={14} />
                     </button>
                     
-                    {/* Dropdown Menu */}
                     {isMenuOpen && (
                         <div className="absolute right-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)] z-50 py-1">
                             <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
@@ -83,7 +81,6 @@ function WorkspaceItem({ group, currentChannelId }) {
                 </div>
             </div>
             
-            {/* Channels List (Collapsible) */}
             {isExpanded && (
                 <div className="pl-6 space-y-0.5">
                     {group.channels && group.channels.map(channel => (
@@ -109,129 +106,270 @@ function WorkspaceItem({ group, currentChannelId }) {
     );
 }
 
-export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentChannelId = null }) {
-    const isOwner = auth.user.roles?.includes('owner') || true; // TODO: implement proper role check if needed
-    
-    // We can define base menu items
+function SearchModal({ isOpen, onClose, groups }) {
+    const [query, setQuery] = useState('');
+    const inputRef = useRef(null);
+
+    useEffect(() => {
+        if (isOpen && inputRef.current) {
+            setTimeout(() => inputRef.current?.focus(), 50);
+        }
+        if (!isOpen) setQuery('');
+    }, [isOpen]);
+
+    useEffect(() => {
+        const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+    }, [onClose]);
+
     const menuItems = [
-        { name: 'Main Overview', icon: IconHome, href: route('dashboard.owner') },
-        { name: 'SyncBot Control Center', icon: IconRobot, href: '#' },
-        { name: 'Team Management', icon: IconUsers, href: '#' },
-        { name: 'Blocker Radar', icon: IconRadar, href: '#' },
-        { name: 'Daily Report Archive', icon: IconArchive, href: '#' },
-        { name: 'Workspace Settings', icon: IconSettings, href: '#' },
+        { name: 'Main Overview', href: route('dashboard.owner'), icon: IconHome, desc: 'Dashboard utama' },
+        { name: 'SyncBot Control Center', href: route('dashboard.syncbot'), icon: IconRobot, desc: 'Konfigurasi bot otomatis' },
+        { name: 'Team Management', href: route('dashboard.team'), icon: IconUsers, desc: 'Kelola anggota tim' },
+        { name: 'Blocker Radar', href: route('dashboard.blockers'), icon: IconRadar, desc: 'Pantau blocker hari ini' },
+        { name: 'Daily Report Archive', href: route('dashboard.reports'), icon: IconArchive, desc: 'Arsip laporan harian' },
+        { name: 'Workspace Settings', href: route('dashboard.settings'), icon: IconSettings, desc: 'Pengaturan workspace' },
     ];
 
+    const allChannels = (groups || []).flatMap(g =>
+        (g.channels || []).map(ch => ({
+            name: `#${ch.name}`,
+            href: route('chat.show', ch.id),
+            icon: IconHash,
+            desc: `Channel di ${g.name}`,
+        }))
+    );
+
+    const allItems = [...menuItems, ...allChannels];
+
+    const filtered = query.trim()
+        ? allItems.filter(item =>
+            item.name.toLowerCase().includes(query.toLowerCase()) ||
+            item.desc.toLowerCase().includes(query.toLowerCase())
+          )
+        : menuItems;
+
+    if (!isOpen) return null;
+
     return (
-        <aside 
-            className={`flex flex-col border-r border-slate-200 bg-[#F9F9F9] transition-all duration-300 ease-in-out shrink-0 ${isCollapsed ? 'w-16' : 'w-64'}`}
-        >
-            {/* Sidebar Header */}
-            <div className="flex items-center h-14 px-3 overflow-hidden whitespace-nowrap">
-                {/* Brand Logo & Name */}
-                <div className={`flex items-center gap-2 overflow-hidden transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}>
-                    <img src="/img/logo/logo-main.svg" alt="Briefly" className="w-5 h-5 shrink-0" onError={(e) => e.target.style.display = 'none'} />
-                    <span className="font-semibold text-sm">Briefly</span>
-                </div>
-
-                {/* Spacer to push toggle to the right */}
-                <div className="flex-1 transition-all duration-300"></div>
-
-                {/* Icon Container for Header Toggle */}
-                <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                    <button 
-                        onClick={() => setIsCollapsed(!isCollapsed)}
-                        className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-colors focus:outline-none"
-                        title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-                    >
-                        {isCollapsed ? <IconLayoutSidebarLeftExpand size={18} stroke={1.5} /> : <IconLayoutSidebarLeftCollapse size={18} stroke={1.5} />}
+        <div className="fixed inset-0 z-[200] flex items-start justify-center pt-20 px-4" onClick={onClose}>
+            <div
+                className="w-full max-w-md bg-white rounded-2xl shadow-[0_20px_60px_-10px_rgba(0,0,0,0.2)] border border-slate-200 overflow-hidden"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Search Input */}
+                <div className="flex items-center gap-3 px-4 py-3.5 border-b border-slate-100">
+                    <IconSearch size={16} className="text-slate-400 shrink-0" />
+                    <input
+                        ref={inputRef}
+                        type="text"
+                        placeholder="Search pages, channels..."
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                        className="flex-1 text-sm text-slate-900 placeholder-slate-400 outline-none bg-transparent"
+                    />
+                    <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+                        <IconX size={16} />
                     </button>
                 </div>
-            </div>
 
-            {/* Sidebar Actions */}
-            <div className="px-3 py-2 space-y-1">
-                <Link
-                    href={route('workspace.create')}
-                    className="flex items-center w-full h-9 text-sm font-medium text-emerald-700 bg-emerald-50 rounded-md hover:bg-emerald-100 transition-colors overflow-hidden whitespace-nowrap"
-                    title={isCollapsed ? 'New Workspace' : ''}
-                >
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <div className="flex items-center justify-center w-5 h-5 bg-emerald-500 rounded-full text-white">
-                            <IconPlus size={14} stroke={2} />
+                {/* Results */}
+                <div className="max-h-72 overflow-y-auto">
+                    {filtered.length === 0 ? (
+                        <div className="py-10 text-center text-slate-400 text-sm">
+                            No results for "{query}"
                         </div>
-                    </div>
-                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>New Workspace</span>
-                </Link>
+                    ) : (
+                        <div className="py-2">
+                            {!query && <p className="px-4 py-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider">Pages</p>}
+                            {filtered.map((item, i) => (
+                                <Link
+                                    key={i}
+                                    href={item.href}
+                                    onClick={onClose}
+                                    className="flex items-center gap-3 px-4 py-2.5 hover:bg-slate-50 transition-colors group"
+                                >
+                                    <div className="w-7 h-7 rounded-md bg-slate-100 flex items-center justify-center shrink-0 group-hover:bg-emerald-100 transition-colors">
+                                        <item.icon size={14} className="text-slate-500 group-hover:text-emerald-600 transition-colors" />
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-medium text-slate-800">{item.name}</p>
+                                        <p className="text-xs text-slate-400">{item.desc}</p>
+                                    </div>
+                                    <IconArrowRight size={13} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
 
-                <button className="flex items-center w-full h-9 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-200 transition-colors overflow-hidden whitespace-nowrap">
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <IconSearch size={18} stroke={1.5} className="text-slate-500" />
-                    </div>
-                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>Search</span>
-                </button>
-            </div>
-
-            {/* Sidebar Navigation */}
-            <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
-                <nav className="px-3 space-y-0.5">
-                    {menuItems.map((item, index) => (
-                        <Link 
-                            key={index}
-                            href={item.href}
-                            className="flex items-center w-full h-9 text-sm text-slate-700 rounded-md hover:bg-slate-200 transition-colors group overflow-hidden whitespace-nowrap"
-                            title={isCollapsed ? item.name : ''}
-                        >
-                            <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                                <item.icon size={18} stroke={1.5} className="text-slate-500 group-hover:text-slate-900 transition-colors" />
-                            </div>
-                            <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100 pr-3'}`}>
-                                {item.name}
-                            </span>
-                        </Link>
-                    ))}
-                </nav>
-
-                <div className={`px-5 mt-6 mb-2 transition-all duration-300 ${isCollapsed ? 'opacity-0 h-0 invisible overflow-hidden' : 'opacity-100 visible overflow-visible'}`}>
-                    <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">Workspaces</h3>
-                    </div>
-                    
-                    <div className="space-y-2">
-                        {groups.map(group => (
-                            <WorkspaceItem key={group.id} group={group} currentChannelId={currentChannelId} />
-                        ))}
-                        
-                        {groups.length === 0 && (
-                            <p className="text-xs text-slate-500 italic px-2">No workspaces yet.</p>
-                        )}
-                    </div>
+                <div className="px-4 py-2.5 border-t border-slate-100 flex items-center gap-3 text-xs text-slate-400">
+                    <span className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-[10px]">↵</span> to select
+                    <span className="bg-slate-100 px-1.5 py-0.5 rounded font-mono text-[10px]">Esc</span> to close
                 </div>
             </div>
-
-            {/* Sidebar Footer */}
-            <div className="p-3 border-t border-slate-200 space-y-1 overflow-hidden">
-                <button className="flex items-center w-full h-9 text-sm text-slate-700 rounded-md hover:bg-slate-200 transition-colors whitespace-nowrap" title={isCollapsed ? "Download App" : ""}>
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <IconDownload size={18} stroke={1.5} className="text-slate-500" />
-                    </div>
-                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>Download App</span>
-                </button>
-                
-                <div className="flex items-center w-full h-9 mt-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer whitespace-nowrap" title={isCollapsed ? "Profile & Settings" : ""}>
-                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
-                        <div className="w-6 h-6 rounded-full bg-[#334155] text-white flex items-center justify-center text-xs font-bold">
-                            {auth.user.name.charAt(0).toUpperCase()}
-                        </div>
-                    </div>
-                    <div className={`flex-1 min-w-0 flex items-center justify-between transition-opacity duration-300 ${isCollapsed ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
-                        <span className="text-sm font-medium text-slate-900 truncate pr-2">{auth.user.name}</span>
-                        <Link href={route('logout')} method="post" as="button" className="text-slate-400 hover:text-red-500 p-1 rounded-md transition-colors shrink-0 mr-1" title="Logout">
-                            <IconLogout size={14} stroke={1.5} />
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </aside>
+        </div>
     );
 }
+
+export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentChannelId = null }) {
+    const { url } = usePage();
+    const [searchOpen, setSearchOpen] = useState(false);
+
+    const menuItems = [
+        { name: 'Main Overview', icon: IconHome, href: route('dashboard.owner') },
+        { name: 'SyncBot Control Center', icon: IconRobot, href: route('dashboard.syncbot') },
+        { name: 'Team Management', icon: IconUsers, href: route('dashboard.team') },
+        { name: 'Blocker Radar', icon: IconRadar, href: route('dashboard.blockers') },
+        { name: 'Daily Report Archive', icon: IconArchive, href: route('dashboard.reports') },
+        { name: 'Workspace Settings', icon: IconSettings, href: route('dashboard.settings') },
+    ];
+
+    const isActive = (href) => url === href || url.startsWith(href + '?');
+
+    // Keyboard shortcut: Ctrl+K or Cmd+K
+    useEffect(() => {
+        const handleKey = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                setSearchOpen(prev => !prev);
+            }
+        };
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+    }, []);
+
+    return (
+        <>
+            <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} groups={groups} />
+
+            <aside 
+                className={`flex flex-col border-r border-slate-200 bg-[#F9F9F9] transition-all duration-300 ease-in-out shrink-0 ${isCollapsed ? 'w-16' : 'w-64'}`}
+            >
+                {/* Sidebar Header */}
+                <div className="flex items-center h-14 px-3 overflow-hidden whitespace-nowrap">
+                    <div className={`flex items-center gap-2 overflow-hidden transition-opacity duration-300 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100 w-auto'}`}>
+                        <img src="/img/logo/logo-main.svg" alt="Briefly" className="w-5 h-5 shrink-0" onError={(e) => e.target.style.display = 'none'} />
+                        <span className="font-semibold text-sm">Briefly</span>
+                    </div>
+
+                    <div className="flex-1 transition-all duration-300"></div>
+
+                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
+                        <button 
+                            onClick={() => setIsCollapsed(!isCollapsed)}
+                            className="p-1.5 rounded-md text-slate-500 hover:bg-slate-200 transition-colors focus:outline-none"
+                            title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                        >
+                            {isCollapsed ? <IconLayoutSidebarLeftExpand size={18} stroke={1.5} /> : <IconLayoutSidebarLeftCollapse size={18} stroke={1.5} />}
+                        </button>
+                    </div>
+                </div>
+
+                {/* Sidebar Actions */}
+                <div className="px-3 py-2 space-y-1">
+                    <Link
+                        href={route('workspace.create')}
+                        className="flex items-center w-full h-9 text-sm font-medium text-emerald-700 bg-emerald-50 rounded-md hover:bg-emerald-100 transition-colors overflow-hidden whitespace-nowrap"
+                        title={isCollapsed ? 'New Workspace' : ''}
+                    >
+                        <div className="w-10 shrink-0 flex items-center justify-center h-full">
+                            <div className="flex items-center justify-center w-5 h-5 bg-emerald-500 rounded-full text-white">
+                                <IconPlus size={14} stroke={2} />
+                            </div>
+                        </div>
+                        <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>New Workspace</span>
+                    </Link>
+
+                    <button
+                        onClick={() => setSearchOpen(true)}
+                        className="flex items-center w-full h-9 text-sm font-medium text-slate-700 rounded-md hover:bg-slate-200 transition-colors overflow-hidden whitespace-nowrap"
+                        title={isCollapsed ? 'Search' : ''}
+                    >
+                        <div className="w-10 shrink-0 flex items-center justify-center h-full">
+                            <IconSearch size={18} stroke={1.5} className="text-slate-500" />
+                        </div>
+                        <span className={`flex-1 text-left transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>Search</span>
+                        {!isCollapsed && (
+                            <span className="mr-2 text-[10px] text-slate-400 bg-slate-100 border border-slate-200 px-1.5 py-0.5 rounded font-mono">⌘K</span>
+                        )}
+                    </button>
+                </div>
+
+                {/* Sidebar Navigation */}
+                <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
+                    <nav className="px-3 space-y-0.5">
+                        {menuItems.map((item, index) => {
+                            const active = isActive(item.href);
+                            return (
+                                <Link 
+                                    key={index}
+                                    href={item.href}
+                                    className={`flex items-center w-full h-9 text-sm rounded-md transition-colors group overflow-hidden whitespace-nowrap ${
+                                        active
+                                            ? 'bg-emerald-50 text-emerald-700 font-medium'
+                                            : 'text-slate-700 hover:bg-slate-200'
+                                    }`}
+                                    title={isCollapsed ? item.name : ''}
+                                >
+                                    <div className="w-10 shrink-0 flex items-center justify-center h-full">
+                                        <item.icon
+                                            size={18}
+                                            stroke={1.5}
+                                            className={`transition-colors ${active ? 'text-emerald-600' : 'text-slate-500 group-hover:text-slate-900'}`}
+                                        />
+                                    </div>
+                                    <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100 pr-3'}`}>
+                                        {item.name}
+                                    </span>
+                                </Link>
+                            );
+                        })}
+                    </nav>
+
+                    <div className={`px-5 mt-6 mb-2 transition-all duration-300 ${isCollapsed ? 'opacity-0 h-0 invisible overflow-hidden' : 'opacity-100 visible overflow-visible'}`}>
+                        <div className="flex items-center justify-between mb-2">
+                            <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-wider whitespace-nowrap">Workspaces</h3>
+                        </div>
+                        
+                        <div className="space-y-2">
+                            {groups.map(group => (
+                                <WorkspaceItem key={group.id} group={group} currentChannelId={currentChannelId} />
+                            ))}
+                            
+                            {groups.length === 0 && (
+                                <p className="text-xs text-slate-500 italic px-2">No workspaces yet.</p>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Sidebar Footer */}
+                <div className="p-3 border-t border-slate-200 space-y-1 overflow-hidden">
+                    <button className="flex items-center w-full h-9 text-sm text-slate-700 rounded-md hover:bg-slate-200 transition-colors whitespace-nowrap" title={isCollapsed ? "Download App" : ""}>
+                        <div className="w-10 shrink-0 flex items-center justify-center h-full">
+                            <IconDownload size={18} stroke={1.5} className="text-slate-500" />
+                        </div>
+                        <span className={`transition-opacity duration-300 ${isCollapsed ? 'opacity-0' : 'opacity-100'}`}>Download App</span>
+                    </button>
+                    
+                    <div className="flex items-center w-full h-9 mt-1 rounded-md hover:bg-slate-200 transition-colors cursor-pointer whitespace-nowrap" title={isCollapsed ? "Profile & Settings" : ""}>
+                        <div className="w-10 shrink-0 flex items-center justify-center h-full">
+                            <div className="w-6 h-6 rounded-full bg-[#334155] text-white flex items-center justify-center text-xs font-bold">
+                                {auth.user.name.charAt(0).toUpperCase()}
+                            </div>
+                        </div>
+                        <div className={`flex-1 min-w-0 flex items-center justify-between transition-opacity duration-300 ${isCollapsed ? 'opacity-0 invisible' : 'opacity-100 visible'}`}>
+                            <span className="text-sm font-medium text-slate-900 truncate pr-2">{auth.user.name}</span>
+                            <Link href={route('logout')} method="post" as="button" className="text-slate-400 hover:text-red-500 p-1 rounded-md transition-colors shrink-0 mr-1" title="Logout">
+                                <IconLogout size={14} stroke={1.5} />
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </>
+    );
+}
+
