@@ -102,6 +102,9 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     Route::delete('/group/{group}', [GroupController::class, 'destroy'])->name('group.destroy');
     Route::post('/group/{group}/archive', [GroupController::class, 'archive'])->name('group.archive');
     Route::post('/group/{group}/channel', [GroupController::class, 'storeChannel'])->name('group.channel.store');
+    
+    Route::put('/channel/{channel}', [\App\Http\Controllers\ChannelController::class, 'update'])->name('channel.update');
+    Route::delete('/channel/{channel}', [\App\Http\Controllers\ChannelController::class, 'destroy'])->name('channel.destroy');
     // --- Menu Sidebar Routes ---
 
     Route::get('/dashboard/syncbot', function () {

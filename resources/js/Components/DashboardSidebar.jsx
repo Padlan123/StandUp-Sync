@@ -23,7 +23,72 @@ import {
     IconArrowRight,
 } from '@tabler/icons-react';
 
-function WorkspaceItem({ group, currentChannelId, onEdit, onAddChannel, onArchive, onDelete }) {
+function ChannelItem({ channel, currentChannelId, onEditChannel, onDeleteChannel }) {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const menuRef = useRef(null);
+
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (menuRef.current && !menuRef.current.contains(event.target)) {
+                setIsMenuOpen(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleMenuClick = (e, action) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsMenuOpen(false);
+        action(channel);
+    };
+
+    return (
+        <div className="relative group/channel flex items-center">
+            <Link 
+                href={route('chat.show', channel.id)}
+                className={`flex-1 flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors truncate ${
+                    channel.id === currentChannelId
+                        ? 'bg-emerald-50 text-emerald-700 font-medium' 
+                        : 'text-slate-600 hover:bg-slate-200'
+                }`}
+            >
+                <IconHash size={16} className="text-slate-400 shrink-0" />
+                <span className="truncate pr-5">{channel.name}</span>
+            </Link>
+            
+            <div className="absolute right-1" ref={menuRef}>
+                <button 
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setIsMenuOpen(!isMenuOpen);
+                    }}
+                    className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-300 rounded opacity-0 group-hover/channel:opacity-100 transition-all focus:opacity-100"
+                >
+                    <IconDots size={14} />
+                </button>
+                
+                {isMenuOpen && (
+                    <div className="absolute right-0 mt-1 w-40 bg-white border border-slate-200 rounded-md shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)] z-50 py-1">
+                        <button onClick={(e) => handleMenuClick(e, onEditChannel)} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+                            <IconEdit size={14} className="text-slate-400" />
+                            Edit Channel
+                        </button>
+                        <div className="border-t border-slate-100 my-1"></div>
+                        <button onClick={(e) => handleMenuClick(e, onDeleteChannel)} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                            <IconTrash size={14} className="text-red-500" />
+                            Hapus Channel
+                        </button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
+function WorkspaceItem({ group, currentChannelId, onEdit, onAddChannel, onArchive, onDelete, onEditChannel, onDeleteChannel }) {
     const [isExpanded, setIsExpanded] = useState(() => {
         // Cek localStorage dulu
         const savedState = localStorage.getItem(`workspace_expanded_${group.id}`);
@@ -104,18 +169,13 @@ function WorkspaceItem({ group, currentChannelId, onEdit, onAddChannel, onArchiv
             {isExpanded && (
                 <div className="pl-6 space-y-0.5">
                     {group.channels && group.channels.map(channel => (
-                        <Link 
+                        <ChannelItem 
                             key={channel.id} 
-                            href={route('chat.show', channel.id)}
-                            className={`flex items-center gap-2 px-2 py-1.5 text-sm rounded-md transition-colors truncate ${
-                                channel.id === currentChannelId
-                                    ? 'bg-emerald-50 text-emerald-700 font-medium' 
-                                    : 'text-slate-600 hover:bg-slate-200'
-                            }`}
-                        >
-                            <IconHash size={16} className="text-slate-400" />
-                            {channel.name}
-                        </Link>
+                            channel={channel} 
+                            currentChannelId={currentChannelId}
+                            onEditChannel={onEditChannel}
+                            onDeleteChannel={onDeleteChannel}
+                        />
                     ))}
                     {(!group.channels || group.channels.length === 0) && (
                         <p className="text-xs text-slate-400 italic px-2 py-1">No channels yet.</p>
@@ -236,36 +296,40 @@ function SearchModal({ isOpen, onClose, groups }) {
 export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentChannelId = null }) {
     const { url } = usePage();
     const [searchOpen, setSearchOpen] = useState(false);
-    const [modalState, setModalState] = useState({ type: null, group: null });
+    const [modalState, setModalState] = useState({ type: null, target: null });
     const [formData, setFormData] = useState({ name: '', description: '' });
 
-    const openModal = (type, group) => {
-        setModalState({ type, group });
-        if (type === 'edit') {
-            setFormData({ name: group.name, description: group.description || '' });
+    const openModal = (type, target) => {
+        setModalState({ type, target });
+        if (type === 'edit' || type === 'editChannel') {
+            setFormData({ name: target.name, description: target.description || '' });
         } else if (type === 'addChannel') {
             setFormData({ name: '', description: '' });
         }
     };
 
-    const closeModal = () => setModalState({ type: null, group: null });
+    const closeModal = () => setModalState({ type: null, target: null });
 
     const handleFormSubmit = (e) => {
         e.preventDefault();
-        const { type, group } = modalState;
+        const { type, target } = modalState;
         if (type === 'edit') {
-            router.put(route('group.update', group.id), formData, { onSuccess: closeModal });
+            router.put(route('group.update', target.id), formData, { onSuccess: closeModal });
         } else if (type === 'addChannel') {
-            router.post(route('group.channel.store', group.id), formData, { onSuccess: closeModal });
+            router.post(route('group.channel.store', target.id), formData, { onSuccess: closeModal });
+        } else if (type === 'editChannel') {
+            router.put(route('channel.update', target.id), formData, { onSuccess: closeModal });
         }
     };
 
     const handleConfirm = () => {
-        const { type, group } = modalState;
+        const { type, target } = modalState;
         if (type === 'archive') {
-            router.post(route('group.archive', group.id), {}, { onSuccess: closeModal });
+            router.post(route('group.archive', target.id), {}, { onSuccess: closeModal });
         } else if (type === 'delete') {
-            router.delete(route('group.destroy', group.id), { onSuccess: closeModal });
+            router.delete(route('group.destroy', target.id), { onSuccess: closeModal });
+        } else if (type === 'deleteChannel') {
+            router.delete(route('channel.destroy', target.id), { onSuccess: closeModal });
         }
     };
 
@@ -395,6 +459,8 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
                                     onAddChannel={(g) => openModal('addChannel', g)}
                                     onArchive={(g) => openModal('archive', g)}
                                     onDelete={(g) => openModal('delete', g)}
+                                    onEditChannel={(c) => openModal('editChannel', c)}
+                                    onDeleteChannel={(c) => openModal('deleteChannel', c)}
                                 />
                             ))}
                             
@@ -434,11 +500,11 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
             {modalState.type && (
                 <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
                     <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
-                        {(modalState.type === 'edit' || modalState.type === 'addChannel') && (
+                        {(modalState.type === 'edit' || modalState.type === 'addChannel' || modalState.type === 'editChannel') && (
                             <form onSubmit={handleFormSubmit}>
                                 <div className="p-5 border-b border-slate-100">
                                     <h3 className="font-semibold text-lg text-slate-800">
-                                        {modalState.type === 'edit' ? 'Edit Workspace' : 'Tambah Channel'}
+                                        {modalState.type === 'edit' ? 'Edit Workspace' : (modalState.type === 'addChannel' ? 'Tambah Channel' : 'Edit Channel')}
                                     </h3>
                                 </div>
                                 <div className="p-5 space-y-4">
@@ -468,24 +534,27 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
                                 </div>
                             </form>
                         )}
-                        {(modalState.type === 'archive' || modalState.type === 'delete') && (
+                        {(modalState.type === 'archive' || modalState.type === 'delete' || modalState.type === 'deleteChannel') && (
                             <div>
                                 <div className="p-5 border-b border-slate-100">
-                                    <h3 className={`font-semibold text-lg ${modalState.type === 'delete' ? 'text-red-600' : 'text-amber-600'}`}>
-                                        {modalState.type === 'delete' ? 'Hapus Workspace' : (modalState.group.is_archived ? 'Buka Arsip Workspace' : 'Arsipkan Workspace')}
+                                    <h3 className={`font-semibold text-lg ${modalState.type === 'archive' ? 'text-amber-600' : 'text-red-600'}`}>
+                                        {modalState.type === 'delete' ? 'Hapus Workspace' : (modalState.type === 'deleteChannel' ? 'Hapus Channel' : (modalState.target.is_archived ? 'Buka Arsip Workspace' : 'Arsipkan Workspace'))}
                                     </h3>
                                 </div>
                                 <div className="p-5">
                                     <p className="text-slate-600 text-sm">
                                         {modalState.type === 'delete' 
-                                            ? `Apakah Anda yakin ingin menghapus workspace "${modalState.group.name}" secara permanen? Semua channel dan pesan di dalamnya akan ikut terhapus dan tidak dapat dikembalikan.`
-                                            : `Apakah Anda yakin ingin ${modalState.group.is_archived ? 'membuka arsip' : 'mengarsipkan'} workspace "${modalState.group.name}"?`
+                                            ? `Apakah Anda yakin ingin menghapus workspace "${modalState.target.name}" secara permanen? Semua channel dan pesan di dalamnya akan ikut terhapus dan tidak dapat dikembalikan.`
+                                            : (modalState.type === 'deleteChannel'
+                                                ? `Apakah Anda yakin ingin menghapus channel "${modalState.target.name}" secara permanen? Semua pesan di dalamnya akan ikut terhapus.`
+                                                : `Apakah Anda yakin ingin ${modalState.target.is_archived ? 'membuka arsip' : 'mengarsipkan'} workspace "${modalState.target.name}"?`
+                                            )
                                         }
                                     </p>
                                 </div>
                                 <div className="p-4 bg-slate-50 flex justify-end gap-2 border-t border-slate-100">
                                     <button type="button" onClick={closeModal} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50">Batal</button>
-                                    <button onClick={handleConfirm} className={`px-4 py-2 text-sm font-medium text-white rounded-md ${modalState.type === 'delete' ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-500 hover:bg-amber-600'}`}>
+                                    <button onClick={handleConfirm} className={`px-4 py-2 text-sm font-medium text-white rounded-md ${(modalState.type === 'delete' || modalState.type === 'deleteChannel') ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-500 hover:bg-amber-600'}`}>
                                         Ya, Lanjutkan
                                     </button>
                                 </div>
