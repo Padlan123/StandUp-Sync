@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, router } from '@inertiajs/react';
 import { 
     IconLayoutSidebarLeftCollapse, 
     IconLayoutSidebarLeftExpand, 
@@ -23,7 +23,7 @@ import {
     IconArrowRight,
 } from '@tabler/icons-react';
 
-function WorkspaceItem({ group, currentChannelId }) {
+function WorkspaceItem({ group, currentChannelId, onEdit, onAddChannel, onArchive, onDelete }) {
     const [isExpanded, setIsExpanded] = useState(() => {
         // Cek localStorage dulu
         const savedState = localStorage.getItem(`workspace_expanded_${group.id}`);
@@ -53,6 +53,11 @@ function WorkspaceItem({ group, currentChannelId }) {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
+    const handleMenuClick = (action) => {
+        setIsMenuOpen(false);
+        action(group);
+    };
+
     return (
         <div className="space-y-1">
             <div className="flex items-center justify-between px-2 mb-1 group relative">
@@ -74,20 +79,20 @@ function WorkspaceItem({ group, currentChannelId }) {
                     
                     {isMenuOpen && (
                         <div className="absolute right-0 mt-1 w-48 bg-white border border-slate-200 rounded-md shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08)] z-50 py-1">
-                            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+                            <button onClick={() => handleMenuClick(onEdit)} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
                                 <IconEdit size={14} className="text-slate-400" />
                                 Edit Workspace
                             </button>
-                            <button className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
+                            <button onClick={() => handleMenuClick(onAddChannel)} className="w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100 flex items-center gap-2">
                                 <IconPlus size={14} className="text-slate-400" />
                                 Tambah Channel
                             </button>
                             <div className="border-t border-slate-100 my-1"></div>
-                            <button className="w-full text-left px-4 py-2 text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2">
+                            <button onClick={() => handleMenuClick(onArchive)} className="w-full text-left px-4 py-2 text-sm text-amber-600 hover:bg-amber-50 flex items-center gap-2">
                                 <IconArchive size={14} className="text-amber-500" />
-                                Arsipkan Workspace
+                                {group.is_archived ? 'Buka Arsip Workspace' : 'Arsipkan Workspace'}
                             </button>
-                            <button className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
+                            <button onClick={() => handleMenuClick(onDelete)} className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 flex items-center gap-2">
                                 <IconTrash size={14} className="text-red-500" />
                                 Hapus Workspace
                             </button>
@@ -231,6 +236,38 @@ function SearchModal({ isOpen, onClose, groups }) {
 export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIsCollapsed, currentChannelId = null }) {
     const { url } = usePage();
     const [searchOpen, setSearchOpen] = useState(false);
+    const [modalState, setModalState] = useState({ type: null, group: null });
+    const [formData, setFormData] = useState({ name: '', description: '' });
+
+    const openModal = (type, group) => {
+        setModalState({ type, group });
+        if (type === 'edit') {
+            setFormData({ name: group.name, description: group.description || '' });
+        } else if (type === 'addChannel') {
+            setFormData({ name: '', description: '' });
+        }
+    };
+
+    const closeModal = () => setModalState({ type: null, group: null });
+
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        const { type, group } = modalState;
+        if (type === 'edit') {
+            router.put(route('group.update', group.id), formData, { onSuccess: closeModal });
+        } else if (type === 'addChannel') {
+            router.post(route('group.channel.store', group.id), formData, { onSuccess: closeModal });
+        }
+    };
+
+    const handleConfirm = () => {
+        const { type, group } = modalState;
+        if (type === 'archive') {
+            router.post(route('group.archive', group.id), {}, { onSuccess: closeModal });
+        } else if (type === 'delete') {
+            router.delete(route('group.destroy', group.id), { onSuccess: closeModal });
+        }
+    };
 
     const menuItems = [
         { name: 'Main Overview', icon: IconHome, href: route('dashboard.owner') },
@@ -350,7 +387,15 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
                         
                         <div className="space-y-2">
                             {groups.map(group => (
-                                <WorkspaceItem key={group.id} group={group} currentChannelId={currentChannelId} />
+                                <WorkspaceItem 
+                                    key={group.id} 
+                                    group={group} 
+                                    currentChannelId={currentChannelId}
+                                    onEdit={(g) => openModal('edit', g)}
+                                    onAddChannel={(g) => openModal('addChannel', g)}
+                                    onArchive={(g) => openModal('archive', g)}
+                                    onDelete={(g) => openModal('delete', g)}
+                                />
                             ))}
                             
                             {groups.length === 0 && (
@@ -384,6 +429,71 @@ export default function DashboardSidebar({ auth, groups = [], isCollapsed, setIs
                     </div>
                 </div>
             </aside>
+
+            {/* Modals */}
+            {modalState.type && (
+                <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+                        {(modalState.type === 'edit' || modalState.type === 'addChannel') && (
+                            <form onSubmit={handleFormSubmit}>
+                                <div className="p-5 border-b border-slate-100">
+                                    <h3 className="font-semibold text-lg text-slate-800">
+                                        {modalState.type === 'edit' ? 'Edit Workspace' : 'Tambah Channel'}
+                                    </h3>
+                                </div>
+                                <div className="p-5 space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Nama</label>
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            value={formData.name} 
+                                            onChange={e => setFormData({...formData, name: e.target.value})}
+                                            className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-medium text-slate-700 mb-1">Deskripsi (Opsional)</label>
+                                        <textarea 
+                                            rows={3}
+                                            value={formData.description} 
+                                            onChange={e => setFormData({...formData, description: e.target.value})}
+                                            className="w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="p-4 bg-slate-50 flex justify-end gap-2 border-t border-slate-100">
+                                    <button type="button" onClick={closeModal} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50">Batal</button>
+                                    <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 rounded-md hover:bg-emerald-700">Simpan</button>
+                                </div>
+                            </form>
+                        )}
+                        {(modalState.type === 'archive' || modalState.type === 'delete') && (
+                            <div>
+                                <div className="p-5 border-b border-slate-100">
+                                    <h3 className={`font-semibold text-lg ${modalState.type === 'delete' ? 'text-red-600' : 'text-amber-600'}`}>
+                                        {modalState.type === 'delete' ? 'Hapus Workspace' : (modalState.group.is_archived ? 'Buka Arsip Workspace' : 'Arsipkan Workspace')}
+                                    </h3>
+                                </div>
+                                <div className="p-5">
+                                    <p className="text-slate-600 text-sm">
+                                        {modalState.type === 'delete' 
+                                            ? `Apakah Anda yakin ingin menghapus workspace "${modalState.group.name}" secara permanen? Semua channel dan pesan di dalamnya akan ikut terhapus dan tidak dapat dikembalikan.`
+                                            : `Apakah Anda yakin ingin ${modalState.group.is_archived ? 'membuka arsip' : 'mengarsipkan'} workspace "${modalState.group.name}"?`
+                                        }
+                                    </p>
+                                </div>
+                                <div className="p-4 bg-slate-50 flex justify-end gap-2 border-t border-slate-100">
+                                    <button type="button" onClick={closeModal} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50">Batal</button>
+                                    <button onClick={handleConfirm} className={`px-4 py-2 text-sm font-medium text-white rounded-md ${modalState.type === 'delete' ? 'bg-red-600 hover:bg-red-700' : 'bg-amber-500 hover:bg-amber-600'}`}>
+                                        Ya, Lanjutkan
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
         </>
     );
 }

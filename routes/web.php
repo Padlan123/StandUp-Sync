@@ -98,7 +98,10 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     })->name('workspace.create');
 
     Route::post('/group', [GroupController::class, 'store'])->name('create.group');
-
+    Route::put('/group/{group}', [GroupController::class, 'update'])->name('group.update');
+    Route::delete('/group/{group}', [GroupController::class, 'destroy'])->name('group.destroy');
+    Route::post('/group/{group}/archive', [GroupController::class, 'archive'])->name('group.archive');
+    Route::post('/group/{group}/channel', [GroupController::class, 'storeChannel'])->name('group.channel.store');
     // --- Menu Sidebar Routes ---
 
     Route::get('/dashboard/syncbot', function () {

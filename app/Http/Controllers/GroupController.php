@@ -68,4 +68,59 @@ class GroupController extends Controller
 
         return back()->withErrors(['invite_code' => 'Invite code tidak valid.']);
     }
+
+    public function update(Request $request, Group $group)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $group->update([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return back()->with('success', 'Workspace berhasil diupdate.');
+    }
+
+    public function archive(Group $group)
+    {
+        $group->update([
+            'is_archived' => !$group->is_archived,
+        ]);
+
+        $status = $group->is_archived ? 'diarsipkan' : 'dipulihkan';
+        return back()->with('success', "Workspace berhasil {$status}.");
+    }
+
+    public function destroy(Group $group)
+    {
+        // Delete related channels (and messages will be deleted via DB constraints or model events if setup, 
+        // but for safety we can delete them here if not cascaded)
+        foreach ($group->channels as $channel) {
+            $channel->messages()->delete();
+            $channel->delete();
+        }
+        $group->messages()->delete();
+        $group->users()->detach();
+        $group->delete();
+
+        return redirect()->route('dashboard.owner')->with('success', 'Workspace berhasil dihapus.');
+    }
+
+    public function storeChannel(Request $request, Group $group)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:1000',
+        ]);
+
+        $channel = $group->channels()->create([
+            'name' => strtolower(str_replace(' ', '-', $request->name)),
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('chat.show', $channel->id)->with('success', 'Channel berhasil ditambahkan.');
+    }
 }
