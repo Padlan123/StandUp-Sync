@@ -36,7 +36,7 @@ class ChatController extends Controller
             ->values();
 
         // Load semua group yang dimiliki/diikuti user dengan relasi channels
-        $groups = Auth::user()->groups()->with('channels')->latest('groups.created_at')->get();
+        $groups = Auth::user()->groups()->with('channels')->get();
 
         return Inertia::render('Chat/ChatRoom', [
             'channel'  => $channel,
