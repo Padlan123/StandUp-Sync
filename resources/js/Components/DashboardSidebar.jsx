@@ -24,11 +24,24 @@ import {
 } from '@tabler/icons-react';
 
 function WorkspaceItem({ group, currentChannelId }) {
-    // Expand workspace only if it contains the currently active channel
-    const hasActiveChannel = group.channels?.some(c => c.id === currentChannelId);
-    const [isExpanded, setIsExpanded] = useState(hasActiveChannel || false);
+    const [isExpanded, setIsExpanded] = useState(() => {
+        // Cek localStorage dulu
+        const savedState = localStorage.getItem(`workspace_expanded_${group.id}`);
+        if (savedState !== null) {
+            return savedState === 'true';
+        }
+        // Fallback default: buka jika ada channel yang aktif
+        return group.channels?.some(c => c.id === currentChannelId) || false;
+    });
+
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
+
+    const toggleExpanded = () => {
+        const newState = !isExpanded;
+        setIsExpanded(newState);
+        localStorage.setItem(`workspace_expanded_${group.id}`, newState.toString());
+    };
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -44,7 +57,7 @@ function WorkspaceItem({ group, currentChannelId }) {
         <div className="space-y-1">
             <div className="flex items-center justify-between px-2 mb-1 group relative">
                 <button 
-                    onClick={() => setIsExpanded(!isExpanded)}
+                    onClick={toggleExpanded}
                     className="flex-1 flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors text-left"
                 >
                     {isExpanded ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />}
