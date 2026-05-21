@@ -397,9 +397,14 @@ export default function ChatRoom({ auth, group, channel, messages: initialMessag
                         <IconHash size={20} />
                     </button>
                     <div className="flex-1 min-w-0">
-                        <h1 className="font-semibold text-slate-800 text-base truncate">{channel.name}</h1>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-100 uppercase tracking-wider">
+                                {group.name}
+                            </span>
+                            <h1 className="font-semibold text-slate-800 text-base truncate"># {channel.name}</h1>
+                        </div>
                         {channel.description && (
-                            <p className="text-xs text-slate-500 truncate">{channel.description}</p>
+                            <p className="text-xs text-slate-500 truncate mt-0.5">{channel.description}</p>
                         )}
                     </div>
 

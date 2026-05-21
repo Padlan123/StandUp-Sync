@@ -24,7 +24,9 @@ import {
 } from '@tabler/icons-react';
 
 function WorkspaceItem({ group, currentChannelId }) {
-    const [isExpanded, setIsExpanded] = useState(true);
+    // Expand workspace only if it contains the currently active channel
+    const hasActiveChannel = group.channels?.some(c => c.id === currentChannelId);
+    const [isExpanded, setIsExpanded] = useState(hasActiveChannel || false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
