@@ -18,33 +18,46 @@ class SyncBotService
      * @param string  $content   Isi pesan
      * @param string|null $discordChannelId  Discord channel ID (opsional, pakai default jika kosong)
      */
-    public function sendMessage(Channel $channel, string $content, ?string $discordChannelId = null): Message
+    public function sendMessage(Channel $channel, string $content, ?string $discordChannelId = null): ?Message
     {
         $group = $channel->group;
+        $botConfig = $group->botConfig;
 
-        // 1. Simpan pesan bot ke database (user_id = null = BOT)
-        $message = Message::create([
-            'group_id'   => $group->id,
-            'channel_id' => $channel->id,
-            'user_id'    => null,
-            'content'    => $content,
-        ]);
+        $sendToChat = $botConfig ? $botConfig->send_to_chat : true;
+        $sendToDiscord = $botConfig ? $botConfig->send_to_discord : false;
+        
+        $message = null;
 
-        // Tambahkan data bot ke relasi user agar frontend bisa render dengan benar
-        $message->setRelation('user', (object)[
-            'id'   => null,
-            'name' => 'SyncBot',
-        ]);
+        if ($sendToChat) {
+            // 1. Simpan pesan bot ke database (user_id = null = BOT)
+            $message = Message::create([
+                'group_id'   => $group->id,
+                'channel_id' => $channel->id,
+                'user_id'    => null,
+                'content'    => $content,
+            ]);
 
-        // 2. Broadcast ke semua user yang sedang buka chat (via Reverb WebSocket)
-        broadcast(new MessageSent($message));
+            // Tambahkan data bot ke relasi user agar frontend bisa render dengan benar
+            $message->setRelation('user', (object)[
+                'id'   => null,
+                'name' => 'SyncBot',
+            ]);
 
-        // 3. Kirim juga ke Discord channel
-        $channelId = $discordChannelId ?? config('services.discord.default_channel_id', '1505198303560732794');
-        try {
-            $this->discord->sendMessage($channelId, "🤖 **SyncBot** | {$group->name}\n{$content}");
-        } catch (\Exception $e) {
-            // Abaikan error Discord agar tidak mengganggu alur utama
+            // 2. Broadcast ke semua user yang sedang buka chat (via Reverb WebSocket)
+            broadcast(new MessageSent($message));
+        }
+
+        if ($sendToDiscord || $discordChannelId) {
+            // 3. Kirim juga ke Discord channel
+            $channelId = $discordChannelId ?? ($botConfig ? $botConfig->discord_channel_id : null) ?? config('services.discord.default_channel_id', '1505198303560732794');
+            
+            if ($channelId) {
+                try {
+                    $this->discord->sendMessage($channelId, "🤖 **SyncBot** | {$group->name}\n{$content}");
+                } catch (\Exception $e) {
+                    // Abaikan error Discord agar tidak mengganggu alur utama
+                }
+            }
         }
 
         return $message;

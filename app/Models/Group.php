@@ -22,4 +22,9 @@ class Group extends Model
     {
         return $this->hasMany(Message::class);
     }
+
+    public function botConfig()
+    {
+        return $this->hasOne(BotConfig::class);
+    }
 }

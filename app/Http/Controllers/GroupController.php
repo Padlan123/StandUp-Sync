@@ -30,6 +30,9 @@ class GroupController extends Controller
             'description' => 'General discussion channel',
         ]);
 
+        // Initialize Bot Config
+        $group->botConfig()->create([]);
+
         // Notifikasi Discord saat workspace baru dibuat
         try {
             $channelId = '1505198303560732794';

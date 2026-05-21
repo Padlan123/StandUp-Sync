@@ -105,13 +105,16 @@ Route::middleware(['auth', 'role:owner'])->group(function () {
     
     Route::put('/channel/{channel}', [\App\Http\Controllers\ChannelController::class, 'update'])->name('channel.update');
     Route::delete('/channel/{channel}', [\App\Http\Controllers\ChannelController::class, 'destroy'])->name('channel.destroy');
+    
+    // Bot Configuration route
+    Route::put('/group/{group}/bot-config', [\App\Http\Controllers\BotConfigController::class, 'update'])->name('bot-config.update');
+
     // --- Menu Sidebar Routes ---
 
     Route::get('/dashboard/syncbot', function () {
-        $groups = auth()->user()->groups()->with('channels')->get();
+        $groups = auth()->user()->groups()->with(['channels', 'botConfig'])->get();
         return Inertia::render('Dashboard/SyncBotControlCenter', [
             'groups' => $groups,
-            'botConfig' => ['enabled' => true, 'reminderTime' => '09:00'],
             'recentLogs' => [],
         ]);
     })->name('dashboard.syncbot');
